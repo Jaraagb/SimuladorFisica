@@ -1,7 +1,7 @@
 // Ejecutar:  npm test   (o  node pruebas/pruebas.mjs)
 import * as Fisica from '../src/fisica/fisica.js';
 import { CASOS_PRUEBA, correrCaso, CASOS_VALIDACION, correrValidacion } from '../src/fisica/casos-prueba.js';
-import { validarDatos } from '../src/fisica/validacion.js';
+import { validarTodo } from '../src/fisica/validacion.js';
 
 let fallas = 0;
 for (const caso of CASOS_PRUEBA) {
@@ -15,7 +15,7 @@ for (const caso of CASOS_PRUEBA) {
 }
 console.log('\nValidación de datos:');
 for (const caso of CASOS_VALIDACION) {
-  const ok = correrValidacion(validarDatos, caso);
+  const ok = correrValidacion(validarTodo, caso);
   if (!ok) fallas++;
   console.log(`${ok ? '✓' : '✗'} ${caso.nombre}`);
 }

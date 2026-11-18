@@ -89,6 +89,10 @@ La interfaz **nunca** calcula física: siempre llama a `src/fisica/fisica.js`.
 | Frenado hasta v = 0 | Se detiene y queda en reposo: no retrocede |
 | Arranque desde el reposo | Requiere fricción estática. Sin Fₛ,máx y con Fₐ &gt; Fᵣ, supone que arranca y lo avisa |
 | Modo distancia y se detiene antes | Avisa que no alcanza la distancia pedida |
+| Masa &gt; 1000 kg, fuerzas &gt; 1000 N, v₀ &gt; 20 m/s, \|x₀\| &gt; 1000 m | Bloquea: fuera del rango de un carril de laboratorio |
+| El resultado superaría 20 m/s | Bloquea aunque cada dato sea válido: el aire haría que las fuerzas dejen de ser constantes |
+
+Los límites están en `LIMITES`, en `src/fisica/validacion.js`. Las reglas se prueban con `npm test` y en la pestaña Cuentas.
 
 ## Uso de inteligencia artificial y autoría
 

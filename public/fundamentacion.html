@@ -122,6 +122,8 @@
       <tr><td>Después de detenerse (Fₐ &lt; Fᵣ)</td><td>Queda en reposo</td><td>La fricción estática máxima es al menos Fᵣ y Fₐ &lt; Fᵣ: la fricción estática equilibra a Fₐ.</td></tr>
       <tr><td>Arranque desde el reposo</td><td>Se compara Fₐ con Fₛ,máx si se conoce. Si no y Fₐ &gt; Fᵣ, se <b>supone</b> que arranca y se avisa en pantalla</td><td>Decidir si arranca requiere un modelo de fricción estática (Fₛ,máx = μₛ·N). Fᵣ es cinética y no sirve como umbral sin justificación.</td></tr>
       <tr><td>W neto = ΔK</td><td>Se muestra como consistencia interna</td><td>Ambos valores salen de las mismas ecuaciones: no es una validación experimental. La validación se hace contra soluciones manuales independientes.</td></tr>
+      <tr><td>Datos fuera de rango (masa &gt; 1000 kg, fuerzas &gt; 1000 N, v₀ &gt; 20 m/s)</td><td>Se bloquean</td><td>Ya no describen un carro sobre un carril de laboratorio.</td></tr>
+      <tr><td>Resultado de más de 20 m/s</td><td>Se bloquea aunque cada dato sea válido</td><td>A esa rapidez el aire frena con una fuerza que crece con v², así que el supuesto de fuerzas constantes deja de valer.</td></tr>
       <tr><td>Método de cálculo</td><td>Fórmulas exactas por tramos</td><td>Da los mismos valores que la solución manual, sin el error numérico de una simulación paso a paso.</td></tr>
     </tbody>
   </table>

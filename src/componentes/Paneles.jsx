@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import * as Fisica from '../fisica/fisica.js';
 import { CASOS_PRUEBA, correrCaso, CASOS_VALIDACION, correrValidacion } from '../fisica/casos-prueba.js';
-import { validarDatos } from '../fisica/validacion.js';
+import { validarTodo, LIMITES } from '../fisica/validacion.js';
 import { fmt, fmtS } from '../formato.js';
 import Grafica from './Grafica.jsx';
 import { deslizaEn } from './Escenario.jsx';
@@ -153,7 +153,7 @@ export function PanelCuentas({ sim }) {
   const { datos: d, mov, energia: e } = sim;
   const pruebas = useMemo(() => CASOS_PRUEBA.map(c => ({ c, filas: correrCaso(Fisica, c) })), []);
   const buenas = pruebas.filter(p => p.filas.every(f => f.ok)).length;
-  const validaciones = useMemo(() => CASOS_VALIDACION.map(c => ({ c, ok: correrValidacion(validarDatos, c) })), []);
+  const validaciones = useMemo(() => CASOS_VALIDACION.map(c => ({ c, ok: correrValidacion(validarTodo, c) })), []);
   const tD = mov.desliza ? mov.tramos[0].t1 : 0;
 
   const pasos = !mov.desliza
@@ -204,6 +204,12 @@ export function PanelCuentas({ sim }) {
         <h3>Validación de datos de entrada</h3>
         <p className={`resumen-pruebas ${validaciones.every(v => v.ok) ? 'pos' : 'neg'}`}>{validaciones.filter(v => v.ok).length} de {validaciones.length} reglas se cumplen</p>
         <ul className="lista-pruebas">{validaciones.map(({ c, ok }) => <li key={c.nombre}><span className={ok ? 'pos' : 'neg'}>{ok ? '✓' : '✗'}</span> {c.nombre}</li>)}</ul>
+        <h3>Lo que el programa bloquea</h3>
+        <ul className="lista-pruebas">
+          <li><b>Imposible:</b> masa 0 o negativa, fuerzas negativas, tiempo o distancia 0, fricción estática menor que la cinética, texto que no es número.</li>
+          <li><b>Fuera del modelo:</b> velocidad inicial negativa; masa mayor a {LIMITES.m} kg; fuerzas mayores a {LIMITES.F} N; velocidad inicial mayor a {LIMITES.v0} m/s.</li>
+          <li><b>Resultado irreal:</b> si el carro superaría {LIMITES.vMax} m/s. A esa rapidez el aire frena distinto y las fuerzas ya no son constantes.</li>
+        </ul>
         <h3>Modelo</h3>
         <p className="nota">Fuerzas horizontales constantes, masa constante, movimiento rectilíneo y unidades del SI. El peso y la normal se compensan. Al frenar hasta el reposo el carro se detiene y no retrocede. <a href="fundamentacion.html">Ver la fundamentación completa</a>.</p>
       </section>

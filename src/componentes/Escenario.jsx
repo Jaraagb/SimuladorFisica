@@ -36,7 +36,8 @@ export default function Escenario({ sim, anterior, t, capas, bandera, onMoverBan
       <div className="escenario" ref={cajaRef}>
         <svg viewBox={`0 0 ${W} ${H}`} className="escenario-svg" aria-hidden="true"><Papel W={W} /></svg>
         <div className="escenario-error" role="alert">
-          <p className="escenario-error-titulo">Estos datos están fuera del modelo</p>
+          <p className="escenario-error-titulo">Bloqueado: esto no es posible en el modelo</p>
+          <p className="escenario-error-sub">El carro no se lanza hasta que corrijas:</p>
           <ul>{errores.map(e => <li key={e}>{e}</li>)}</ul>
         </div>
       </div>

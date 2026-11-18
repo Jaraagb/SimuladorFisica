@@ -75,9 +75,11 @@ h2, h3 { margin: 0; }
 .aviso-supuesto { border-color: var(--ambar); background: #fff6ec; }
 .aviso-parada { border-color: var(--vel); background: #eaf8f2; }
 
-.escenario-error { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 20px; background: rgba(244, 249, 251, 0.82); }
+.escenario-error { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 20px; background: rgba(253, 236, 234, 0.92); overflow: auto; }
 .escenario-error-titulo { font-size: 22px; font-weight: 800; font-stretch: 112%; margin: 0 0 6px; color: var(--fr); }
-.escenario-error ul { list-style: none; padding: 0; margin: 0; font-size: 16px; }
+.escenario-error ul { list-style: none; padding: 0; margin: 0 auto; font-size: 16px; max-width: 640px; }
+.escenario-error li { background: #fff; border: 2px solid var(--fr); border-radius: 10px; padding: 8px 12px; margin-top: 6px; font-weight: 600; }
+.escenario-error-sub { margin: 0 0 4px; color: var(--grafito); }
 
 .tarjeta-prediccion { background: #fff; border: 2.5px solid var(--tinta); border-radius: 16px; padding: 16px 20px; box-shadow: 6px 6px 0 var(--tinta); margin-bottom: 22px; }
 .tarjeta-prediccion h2 { font-weight: 800; font-size: 22px; font-stretch: 112%; }
@@ -159,6 +161,7 @@ h2, h3 { margin: 0; }
 .pestanas button.activo small { color: #c9d4e6; -webkit-text-fill-color: #c9d4e6; }
 .panel { padding: 18px 0 0; min-height: 280px; }
 .vacio { color: var(--grafito); font-size: 17px; padding: 40px 0; text-align: center; }
+.vacio.bloqueo { color: var(--fr); font-weight: 600; max-width: 60ch; margin: 0 auto; }
 
 .graficas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .grafica { margin: 0; }

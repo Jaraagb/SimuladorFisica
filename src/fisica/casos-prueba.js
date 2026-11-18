@@ -56,11 +56,15 @@ export const CASOS_VALIDACION = [
   { nombre: 'Velocidad inicial negativa → rechazada', entrada: { v0: '-2' }, campo: 'v0', rechaza: true },
   { nombre: 'Tiempo 0 → rechazado', entrada: { tTotal: '0' }, campo: 'tTotal', rechaza: true },
   { nombre: 'Fs,máx menor que Fr → rechazada', entrada: { Fr: '0,5', FsMax: '0,3' }, campo: 'FsMax', rechaza: true },
-  { nombre: 'Texto no numérico → rechazado', entrada: { Fa: 'abc' }, campo: 'Fa', rechaza: true }
+  { nombre: 'Texto no numérico → rechazado', entrada: { Fa: 'abc' }, campo: 'Fa', rechaza: true },
+  { nombre: 'Masa de 5000 kg → rechazada', entrada: { m: '5000' }, campo: 'm', rechaza: true },
+  { nombre: 'Velocidad inicial de 50 m/s → rechazada', entrada: { v0: '50' }, campo: 'v0', rechaza: true },
+  { nombre: 'Resultado irreal (0,1 kg, 5 N, 30 s) → bloqueado', entrada: { m: '0,1', Fa: '5', Fr: '0', tTotal: '30' }, campo: 'resultado', rechaza: true },
+  { nombre: 'Caso A completo → aceptado', entrada: { m: '0,5', Fa: '1,2', Fr: '0,2', v0: '0', modo: 'distancia', dx: '1' }, campo: 'resultado', rechaza: false }
 ];
 const BASE_VALIDA = { m: '0,5', Fa: '1,2', Fr: '0,2', x0: '0', v0: '0', modo: 'tiempo', tTotal: '2', dx: '1', FsMax: '' };
 
-export function correrValidacion(validarDatos, caso) {
-  const r = validarDatos({ ...BASE_VALIDA, ...caso.entrada });
+export function correrValidacion(validarTodo, caso) {
+  const r = validarTodo({ ...BASE_VALIDA, ...caso.entrada });
   return !!r.errores[caso.campo] === caso.rechaza;
 }

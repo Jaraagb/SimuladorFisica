@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Fisica from './fisica/fisica.js';
-import { validarDatos, leerNumero } from './fisica/validacion.js';
+import { validarTodo, leerNumero } from './fisica/validacion.js';
 import { generarEjercicio } from './fisica/practica.js';
 import { RETOS, estrellas } from './retos.js';
 import { fmt, aTexto } from './formato.js';
@@ -23,9 +23,9 @@ const PESTANAS = [['movimiento', 'Movimiento', 'Módulo I'], ['energia', 'Energ�
 const VELOCIDADES = [0.25, 0.5, 1, 2, 4];
 
 function simular(entrada) {
-  const v = validarDatos(entrada);
+  const v = validarTodo(entrada); // bloquea datos imposibles y resultados irreales
   if (!v.ok) return { sim: null, errores: v.errores };
-  const mov = Fisica.calcularMovimiento(v.datos);
+  const mov = v.mov;
   return { sim: { clave: JSON.stringify(v.datos), datos: v.datos, mov, energia: Fisica.calcularEnergia(v.datos, mov) }, errores: {} };
 }
 
@@ -276,7 +276,7 @@ export default function App() {
                   ))}
                 </div>
                 <div className="panel" role="tabpanel" id="panel-resultados" aria-labelledby={`tab-${pestana}`}>
-                  {!sim ? <p className="vacio">Corrige los datos marcados en rojo para ver resultados.</p>
+                  {!sim ? <p className="vacio bloqueo">{errores.resultado ? `Bloqueado. ${errores.resultado}` : 'Bloqueado: corrige los datos marcados en rojo para ver resultados.'}</p>
                     : pestana === 'movimiento' && (revelado || reproduciendo) ? <PanelMovimiento sim={sim} anterior={modo === 'explorar' && capas.anterior ? anterior : null} t={t} mostrarCompleta={modo === 'explorar'} />
                     : !revelado ? <p className="vacio">{modo === 'predecir' ? 'Haz tu predicción y lanza el carro para ver los resultados.' : 'Lanza el carro para ver los resultados.'}</p>
                     : pestana === 'movimiento' ? <PanelMovimiento sim={sim} anterior={null} t={t} mostrarCompleta={false} />
