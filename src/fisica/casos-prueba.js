@@ -16,6 +16,9 @@ export const CASOS_PRUEBA = [
   { nombre: 'Borde · En reposo con Fa ≤ Fr: no arranca',
     datos: { m: 1, Fa: 0.2, Fr: 0.3, x0: 0, v0: 0, modo: 'tiempo', tTotal: 2, FsMax: null },
     esperado: { vf: 0, dx: 0, Wa: 0, Wr: 0, dK: 0 } },
+  { nombre: 'Borde · En reposo con Fa = Fr: no arranca',
+    datos: { m: 1, Fa: 0.3, Fr: 0.3, x0: 0, v0: 0, modo: 'tiempo', tTotal: 2, FsMax: null },
+    esperado: { desliza: 0, vf: 0, dx: 0, Wr: 0 } },
   { nombre: 'Borde · Fs,máx dada y Fa no la supera: no arranca',
     datos: { m: 1, Fa: 0.5, Fr: 0.3, x0: 0, v0: 0, modo: 'tiempo', tTotal: 2, FsMax: 0.6 },
     esperado: { vf: 0, dx: 0, Wneto: 0 } },
@@ -34,11 +37,30 @@ export const CASOS_PRUEBA = [
 export function correrCaso(F, caso) {
   const mov = F.calcularMovimiento(caso.datos);
   const en = F.calcularEnergia(caso.datos, mov);
-  const obtenido = { a: mov.aDesliza, t: mov.tFin, tParada: mov.tParada, vf: mov.vf, xf: mov.xf,
+  const obtenido = { desliza: mov.desliza ? 1 : 0, a: mov.aDesliza, t: mov.tFin, tParada: mov.tParada, vf: mov.vf, xf: mov.xf,
                      dx: en.dx, Kf: en.Kf, dK: en.dK, Wa: en.Wa, Wr: en.Wr, Wneto: en.Wneto };
   const filas = Object.keys(caso.esperado).map(campo => ({
     campo, esperado: caso.esperado[campo], obtenido: obtenido[campo],
     ok: Math.abs(obtenido[campo] - caso.esperado[campo]) < 1e-9 }));
   filas.push({ campo: 'Wneto = ΔK', esperado: 'sí', obtenido: en.consistente ? 'sí' : 'no', ok: en.consistente });
   return filas;
+}
+
+// Reglas de validación: cada entrada debe ser aceptada o rechazada como se espera
+export const CASOS_VALIDACION = [
+  { nombre: 'Masa 0 → rechazada', entrada: { m: '0' }, campo: 'm', rechaza: true },
+  { nombre: 'Masa negativa → rechazada', entrada: { m: '-1' }, campo: 'm', rechaza: true },
+  { nombre: 'Masa 0,5 con coma → aceptada', entrada: { m: '0,5' }, campo: 'm', rechaza: false },
+  { nombre: 'Empuje negativo → rechazado', entrada: { Fa: '-1' }, campo: 'Fa', rechaza: true },
+  { nombre: 'Resistencia negativa → rechazada', entrada: { Fr: '-0,2' }, campo: 'Fr', rechaza: true },
+  { nombre: 'Velocidad inicial negativa → rechazada', entrada: { v0: '-2' }, campo: 'v0', rechaza: true },
+  { nombre: 'Tiempo 0 → rechazado', entrada: { tTotal: '0' }, campo: 'tTotal', rechaza: true },
+  { nombre: 'Fs,máx menor que Fr → rechazada', entrada: { Fr: '0,5', FsMax: '0,3' }, campo: 'FsMax', rechaza: true },
+  { nombre: 'Texto no numérico → rechazado', entrada: { Fa: 'abc' }, campo: 'Fa', rechaza: true }
+];
+const BASE_VALIDA = { m: '0,5', Fa: '1,2', Fr: '0,2', x0: '0', v0: '0', modo: 'tiempo', tTotal: '2', dx: '1', FsMax: '' };
+
+export function correrValidacion(validarDatos, caso) {
+  const r = validarDatos({ ...BASE_VALIDA, ...caso.entrada });
+  return !!r.errores[caso.campo] === caso.rechaza;
 }
