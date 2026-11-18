@@ -1,0 +1,10 @@
+// Configuración de Cloudflare: publica la carpeta dist/ (generada por "npm run build") como sitio estático.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "simuladorfisica",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
