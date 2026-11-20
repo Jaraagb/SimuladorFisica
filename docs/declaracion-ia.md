@@ -1,20 +1,25 @@
 # Declaración de uso de inteligencia artificial
 
-(Sección 12 de la guía. Revisa y ajusta este texto para que describa con exactitud lo que hiciste tú y lo que hizo la herramienta.)
+(Sección 12 de la guía del proyecto.)
 
-**Herramienta utilizada:** Claude (Anthropic).
+**Herramientas utilizadas:** Claude, de Anthropic, de dos formas distintas.
 
-**Tipo de apoyo recibido:**
+## Qué hizo cada herramienta
 
-- Análisis de la guía del proyecto y levantamiento de requisitos.
-- Tutoría conceptual: explicación de diagramas de cuerpo libre, segunda ley de Newton, cinemática con aceleración constante, trabajo y energía cinética, con ejercicios de práctica.
-- Apoyo técnico de programación: estructura del proyecto, generación de código de la interfaz (React) y del núcleo de cálculo, pruebas automáticas y depuración.
+- **Claude AI (chat):** me ayudó a entender la teoría (diagrama de cuerpo libre, segunda ley de Newton, cinemática con aceleración constante, trabajo y energía cinética), a planear el proyecto y a elaborar las guías de estudio (`public/guia.html` y `public/formulario.html`).
+- **Claude Code (programación):** me ayudó a programar y probar el simulador Carrilab: la interfaz en React, el núcleo de cálculo (`src/fisica/`), las pruebas automáticas (`npm test`), la validación de datos y el despliegue en Cloudflare.
 
-**Trabajo propio del estudiante:**
+## Qué hice yo
 
-- Solución manuscrita de los casos A, B y C (diagramas, ecuaciones, sustituciones y conclusiones).
-- Revisión y comprensión de cada función de `src/fisica/fisica.js` y `src/fisica/validacion.js`.
-- Llenado de la tabla de validación con los cálculos manuales.
-- Diseño final de la actividad didáctica.
+- Definí los requisitos del proyecto a partir de la guía de la docente.
+- Revisé los resultados que me entregó la herramienta.
+- Resolví a mano los casos A, B y C (diagrama de cuerpo libre, ecuaciones, sustituciones y conclusiones) y los comparé con el programa en `docs/validacion.md`.
+- Respondo por todo el contenido del proyecto en la sustentación: puedo explicar las ecuaciones, las decisiones de modelación y el código entregado.
 
-Todas las ecuaciones, decisiones de modelación y fragmentos de código entregados pueden ser explicados y defendidos por el estudiante.
+## Firma
+
+Firma: ______________________________
+
+Nombre: Andres Jaramillo
+
+Fecha: ____ / ____ / 2026

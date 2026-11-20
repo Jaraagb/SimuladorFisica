@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Física Mecánica desde cero · Guía interactiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --hoja: #fdfefe; --cuadro: #e2ecf6; --margen: #f2a3a3;
+    --tinta: #1f3a93;           /* bolígrafo azul */
+    --lapiz: #2a2c33;           /* texto */
+    --grafito: #6a6f7a;
+    --rojo: #d23a2f;            /* corrector */
+    --verde: #2e7d32;
+    --resaltador: #fff27a; --res-verde: #c8f5d0; --res-rosa: #ffd0e6;
+    --postit: #fff59d; --postit-rosa: #ffd6e7; --postit-azul: #d9ecff;
+    --borde: 255px 14px 225px 14px / 14px 225px 14px 255px;  /* borde trazado a mano */
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--hoja); }
+  body {
+    margin: 0; color: var(--lapiz); font-family: "Andika", "Segoe UI", system-ui, sans-serif; font-size: 17.5px; line-height: 1.6;
+    background-color: var(--hoja);
+    background-image:
+      linear-gradient(90deg, transparent 54px, var(--margen) 54px, var(--margen) 56px, transparent 56px),
+      linear-gradient(var(--cuadro) 1px, transparent 1px),
+      linear-gradient(90deg, var(--cuadro) 1px, transparent 1px);
+    background-size: 100% 100%, 26px 26px, 26px 26px;
+  }
+  button, input { font: inherit; color: var(--lapiz); -webkit-text-fill-color: currentColor; }
+  button { cursor: pointer; background: #fff; border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 8px 16px; font-weight: 700; transition: transform .1s; }
+  button:hover:not(:disabled) { background: var(--resaltador); transform: rotate(-.6deg); }
+  button.primario { background: var(--resaltador); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  :focus-visible { outline: 3px dashed var(--tinta); outline-offset: 3px; }
+  input[type=range] { width: 100%; accent-color: var(--tinta); }
+  a { color: var(--tinta); }
+
+  .mano { font-family: "Caveat", cursive; }
+  .resalta { background: linear-gradient(100deg, transparent 1%, var(--resaltador) 3%, var(--resaltador) 96%, transparent 99%); padding: 0 .12em; border-radius: .3em .5em; }
+  .resalta-verde { background: linear-gradient(100deg, transparent 2%, var(--res-verde) 4%, var(--res-verde) 94%, transparent 97%); padding: 0 .25em; }
+  .subraya { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q50 1 100 5 T198 4' fill='none' stroke='%23d23a2f' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% 9px; background-position: 0 100%; padding-bottom: 4px; }
+
+  header { max-width: 1000px; margin: 0 auto; padding: 22px 20px 0 76px; position: relative; }
+  h1 { font-family: "Caveat", cursive; font-weight: 700; font-size: 58px; line-height: .95; margin: 0; color: var(--tinta); transform: rotate(-1deg); transform-origin: left; }
+  .subtitulo { margin: 8px 0 0; font-size: 18px; max-width: 60ch; }
+  .acciones-cab { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 14px; }
+  .boton-simulador { display: inline-block; text-decoration: none; color: var(--lapiz); font-weight: 700; background: var(--postit-azul); border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 8px 16px; transform: rotate(.6deg); }
+  .boton-simulador:hover { background: var(--resaltador); }
+  .progreso { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: "Caveat", cursive; font-size: 24px; color: var(--tinta); }
+  .progreso b { color: var(--rojo); }
+
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(253, 254, 254, .94); border-bottom: 2px solid var(--lapiz); margin-top: 18px; }
+  nav .fila { max-width: 1000px; margin: 0 auto; display: flex; gap: 6px; overflow-x: auto; padding: 10px 20px 0 76px; }
+  nav a { flex: none; text-decoration: none; color: var(--lapiz); padding: 6px 14px 4px; font-weight: 700; font-size: 16px; white-space: nowrap; border: 2px solid var(--lapiz); border-bottom: 0; border-radius: 10px 14px 0 0; transform: translateY(4px); transition: transform .12s; }
+  nav a:nth-child(6n+1) { background: #fff8b8; } nav a:nth-child(6n+2) { background: #d4f5dc; } nav a:nth-child(6n+3) { background: #ffd9e8; }
+  nav a:nth-child(6n+4) { background: #dbeaff; } nav a:nth-child(6n+5) { background: #ffe2c4; } nav a:nth-child(6n+6) { background: #e8dcff; }
+  nav a.on { transform: translateY(0); padding-bottom: 8px; box-shadow: 0 -2px 0 var(--lapiz) inset; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 60px 76px; }
+  section { display: none; } section.on { display: block; }
+  h2 { font-family: "Caveat", cursive; font-weight: 700; font-size: 42px; line-height: 1; color: var(--tinta); margin: 0 0 6px; }
+  h3 { font-size: 20px; margin: 0 0 6px; }
+  .lead { margin: 0 0 18px; max-width: 64ch; }
+
+  .hoja { background: #fff; border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 20px 22px; box-shadow: 3px 4px 0 rgba(42, 44, 51, .12); }
+  .postit { background: var(--postit); padding: 14px 18px 12px; margin: 14px 0; position: relative; transform: rotate(-.8deg); box-shadow: 2px 4px 0 rgba(0, 0, 0, .07); }
+  .postit::before { content: ""; position: absolute; top: -11px; left: calc(50% - 40px); width: 80px; height: 22px; background: rgba(255, 255, 255, .65); border: 1px solid rgba(0, 0, 0, .06); transform: rotate(-3deg); }
+  .postit.rosa { background: var(--postit-rosa); transform: rotate(.7deg); }
+  .postit.azul { background: var(--postit-azul); transform: rotate(-.4deg); }
+  .postit .etq { font-family: "Caveat", cursive; font-weight: 700; font-size: 24px; color: var(--tinta); line-height: 1; display: block; margin-bottom: 2px; }
+  .formula { display: inline-block; margin-right: 8px; font-weight: 700; font-size: 22px; color: var(--tinta); border: 2.5px solid var(--tinta); border-radius: var(--borde); padding: 6px 18px; margin: 8px 0; background: #fff; }
+  .bien { color: var(--verde); font-weight: 700; } .mal { color: var(--rojo); font-weight: 700; }
+
+  /* glosario */
+  .buscar { width: 100%; padding: 10px 16px; border: 2px solid var(--lapiz); border-radius: var(--borde); margin-bottom: 12px; background: #fff; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filtros button { padding: 4px 14px; font-size: 15.5px; }
+  .filtros button.on { background: var(--res-verde); }
+  .glosario { display: grid; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); gap: 18px 16px; }
+  .termino { background: #fff; padding: 12px 14px; border: 1.5px solid #c9d3df; border-radius: 3px; position: relative; box-shadow: 2px 3px 0 rgba(0, 0, 0, .05); display: flex; flex-direction: column; gap: 2px; }
+  .termino:nth-child(3n+1) { transform: rotate(-.6deg); } .termino:nth-child(3n+2) { transform: rotate(.5deg); }
+  .termino.sabe { background: #f3fff5; border-color: var(--verde); }
+  .termino .simbolo { font-family: "Caveat", cursive; font-weight: 700; font-size: 44px; line-height: 1; color: var(--tinta); }
+  .termino .nombre { font-weight: 700; }
+  .termino .simple { font-size: 16px; }
+  .termino .extra { font-size: 15px; color: var(--grafito); }
+  .termino label { margin-top: auto; display: flex; gap: 8px; align-items: center; font-size: 15px; font-weight: 700; padding-top: 6px; cursor: pointer; }
+  .termino input { width: 18px; height: 18px; accent-color: var(--verde); }
+  .sello { position: absolute; top: 6px; right: 10px; font-family: "Caveat", cursive; font-size: 26px; color: var(--verde); transform: rotate(8deg); }
+
+  /* juego, preguntas */
+  .grande { font-family: "Caveat", cursive; font-weight: 700; font-size: 84px; text-align: center; color: var(--tinta); line-height: 1; margin: 10px 0; }
+  .titulo-q { font-size: 21px; font-weight: 700; margin: 10px 0 14px; }
+  .opciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+  .opciones button { text-align: left; font-weight: 400; padding: 12px 16px; }
+  .opciones button.ok { background: var(--res-verde); font-weight: 700; }
+  .opciones button.no { background: #fff; color: var(--rojo); -webkit-text-fill-color: var(--rojo); text-decoration: line-through; text-decoration-thickness: 2px; }
+  .marcador { display: flex; gap: 18px; flex-wrap: wrap; font-family: "Caveat", cursive; font-size: 26px; color: var(--tinta); }
+  .regla { height: 14px; border: 2px solid var(--lapiz); border-radius: 4px; margin: 8px 0 14px; background: repeating-linear-gradient(90deg, transparent 0 9px, #c9d3df 9px 10px); position: relative; overflow: hidden; }
+  .regla div { position: absolute; inset: 0 auto 0 0; background: var(--resaltador); mix-blend-mode: multiply; transition: width .3s; width: 0; }
+  .nota-retro { margin-top: 12px; padding: 10px 14px; border-left: 4px solid; font-size: 16.5px; background: #fff; }
+  .nota-retro.si { border-color: var(--verde); } .nota-retro.no { border-color: var(--rojo); }
+  .botones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .centro { text-align: center; } .centro .botones { justify-content: center; }
+
+  /* niveles */
+  .camino { display: grid; grid-template-columns: 260px 1fr; gap: 26px; align-items: start; }
+  .lista-niveles { list-style: none; padding: 0; margin: 0; position: sticky; top: 70px; max-height: calc(100vh - 90px); overflow: auto; }
+  .lista-niveles button { width: 100%; display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; text-align: left; border: 0; border-radius: 0; background: transparent; padding: 5px 4px; font-weight: 400; font-size: 15.5px; line-height: 1.3; }
+  .lista-niveles button:hover:not(:disabled) { background: var(--resaltador); transform: none; }
+  .lista-niveles button.actual { background: var(--res-verde); font-weight: 700; }
+  .caja-check { width: 20px; height: 20px; border: 2px solid var(--lapiz); border-radius: 3px 5px 2px 4px; display: grid; place-items: center; font-family: "Caveat", cursive; font-size: 26px; color: var(--rojo); line-height: 0; margin-top: 1px; }
+  .lista-niveles button:disabled .caja-check { border-style: dashed; }
+  .docente { margin-top: 14px; font-size: 14.5px; display: flex; gap: 8px; align-items: flex-start; color: var(--grafito); cursor: pointer; }
+  .docente input { margin-top: 4px; accent-color: var(--tinta); }
+  #nivel { scroll-margin-top: 72px; }
+  .ir-nivel { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 14px; }
+  .ir-nivel label { font-size: 15px; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+  .ir-nivel select { font: inherit; font-weight: 400; max-width: 230px; padding: 4px 8px; border: 2px solid var(--lapiz); border-radius: 6px 10px 5px 9px; background: #fff; color: var(--lapiz); }
+  .aviso-docente { font-family: "Caveat", cursive; font-size: 22px; color: var(--verde); margin: 4px 0 0; line-height: 1.1; }
+  .num-nivel { font-family: "Caveat", cursive; font-size: 28px; color: var(--rojo); line-height: 1; }
+  .idea { font-size: 19px; }
+  .lab { margin: 18px 0; padding: 14px 18px; background: #fff; border: 2px dashed var(--tinta); border-radius: 6px; }
+  .lab-titulo { font-family: "Caveat", cursive; font-weight: 700; font-size: 28px; color: var(--tinta); margin: 0 0 6px; line-height: 1.05; }
+  .lab svg { width: 100%; height: auto; display: block; }
+  .lab label { font-weight: 700; display: block; margin-top: 8px; }
+  .salida { font-size: 18.5px; margin-top: 10px; }
+  .pregunta { border-top: 2px dashed #c9d3df; padding-top: 14px; margin-top: 16px; }
+  .pregunta .q { font-weight: 700; font-size: 18.5px; margin-bottom: 8px; }
+  .superado { margin-top: 18px; background: var(--postit); padding: 14px 18px; transform: rotate(-.6deg); font-size: 18px; box-shadow: 2px 4px 0 rgba(0, 0, 0, .07); }
+  .superado .mano { font-size: 34px; color: var(--rojo); font-weight: 700; display: block; line-height: 1; }
+  .tabla { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16.5px; }
+  .tabla td, .tabla th { border-bottom: 1.5px solid #c9d3df; padding: 6px 8px; text-align: center; }
+  .item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1.5px dashed #c9d3df; }
+  .item .res { grid-column: 1 / -1; font-size: 16px; }
+  .item .botones { margin-top: 0; } .item button { padding: 4px 12px; font-size: 15px; }
+  .grafs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .grafs button { padding: 4px; }
+  .grafs button.ok { background: var(--res-verde); } .grafs button.no { background: var(--res-rosa); }
+  .paso { display: grid; grid-template-columns: 1fr 170px 110px; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1.5px dashed #c9d3df; }
+  .paso small { display: block; color: var(--grafito); font-size: 14.5px; }
+  .campo { display: inline-flex; align-items: center; border: 2px solid var(--lapiz); border-radius: 6px 10px 5px 9px; background: #fff; }
+  .campo input { width: 92px; border: 0; padding: 6px 8px; text-align: right; font-weight: 700; outline: none; background: transparent; }
+  .campo span { padding: 0 8px 0 2px; color: var(--grafito); font-size: 15px; }
+  .marca { font-weight: 700; font-size: 15.5px; }
+  .enlace-sim { display: inline-block; margin: 6px 0; }
+  .tarea { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1.5px dashed #c9d3df; }
+  .tarea input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--verde); flex: none; }
+
+  footer { max-width: 1000px; margin: 0 auto; padding: 20px 20px 40px 76px; border-top: 2px dashed #c9d3df; font-size: 15.5px; color: var(--grafito); }
+  footer .firma { font-family: "Caveat", cursive; font-size: 30px; color: var(--tinta); display: block; line-height: 1.1; }
+
+  @media (max-width: 800px) {
+    body { background-image: linear-gradient(var(--cuadro) 1px, transparent 1px), linear-gradient(90deg, var(--cuadro) 1px, transparent 1px); background-size: 26px 26px, 26px 26px; }
+    header, main, footer { padding-left: 16px; padding-right: 16px; }
+    nav .fila { padding-left: 12px; }
+    h1 { font-size: 44px; } h2 { font-size: 36px; }
+    .camino { grid-template-columns: 1fr; }
+    .camino > div:first-child { order: 2; }
+    .lista-niveles { position: static; max-height: none; display: grid; grid-template-columns: 1fr 1fr; }
+    .paso { grid-template-columns: 1fr auto; } .paso .marca { grid-column: 1 / -1; }
+    .grande { font-size: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Física Mecánica desde cero</h1>
+  <p class="subtitulo">Guía interactiva para entender <span class="resalta">fuerzas, movimiento y energía</span> en un carril horizontal. Se estudia jugando: cada idea trae un experimento y preguntas para comprobar que la entendiste.</p>
+  <div class="acciones-cab">
+    <a class="boton-simulador" href="https://simuladorfisica.andresjaraafl.workers.dev/#explorar" target="_blank" rel="noopener">Abrir el simulador Carril</a>
+    <div class="progreso" id="progreso"></div>
+  </div>
+</header>
+<nav><div class="fila" id="tabs"></div></nav>
+<main>
+
+<section id="glosario">
+  <h2>El idioma de la física</h2>
+  <p class="lead">Cada símbolo explicado en palabras simples. Marca <b>«Ya lo sé»</b> cuando puedas decirlo sin mirar y después ponte a prueba en el juego.</p>
+  <input class="buscar" id="buscar" placeholder="Busca un símbolo o palabra: masa, Δ, julio…" aria-label="Buscar en el glosario">
+  <div class="filtros" id="filtros"></div>
+  <div class="glosario" id="lista-glosario"></div>
+</section>
+
+<section id="juego">
+  <h2>Juego de símbolos</h2>
+  <p class="lead">Te muestro un símbolo y eliges qué significa. Rondas de 12. La meta: <span class="resalta">12 de 12 sin fallar</span>.</p>
+  <div class="hoja" id="juego-caja"></div>
+</section>
+
+<section id="niveles">
+  <h2>Los 20 niveles</h2>
+  <p class="lead">Cada nivel tiene una idea, un experimento para mover y dos preguntas. Acierta las dos para desbloquear el siguiente.</p>
+  <div class="camino">
+    <div>
+      <ol class="lista-niveles" id="lista-niveles"></ol>
+      <label class="docente"><input type="checkbox" id="modo-docente"> Modo docente: desbloquear todos los niveles</label>
+      <p class="aviso-docente" id="aviso-docente" aria-live="polite"></p>
+    </div>
+    <div class="hoja" id="nivel"></div>
+  </div>
+</section>
+
+<section id="natalia">
+  <h2>Preguntas de Natalia</h2>
+  <p class="lead">Preguntas para practicar como si la profesora Natalia te las hiciera en clase o en una sustentación. Elige la mejor respuesta. Las otras tienen errores comunes: lee por qué están mal y después <b>dila en voz alta con tus palabras</b>.</p>
+  <div class="hoja" id="natalia-caja"></div>
+</section>
+
+<section id="practica">
+  <h2>Práctica con números nuevos</h2>
+  <p class="lead">Ejercicios que cambian cada vez. Resuélvelos en papel, escribe el número y comprueba. Se acepta un margen de redondeo del 2 %.</p>
+  <div class="hoja" id="practica-caja"></div>
+</section>
+
+<section id="examen">
+  <h2>Examen final</h2>
+  <p class="lead">12 preguntas al azar de todos los niveles, sin pistas. Meta: <span class="resalta">10 o más, dos veces seguidas</span>.</p>
+  <div class="hoja" id="examen-caja"></div>
+</section>
+
+</main>
+<footer>
+  <span class="firma">Elaborado por Andres Jaramillo con apoyo de Claude AI</span>
+  Física Mecánica, Universidad Cooperativa de Colombia, 2026-2. Guía para usar con el <a href="https://simuladorfisica.andresjaraafl.workers.dev/#explorar" target="_blank" rel="noopener">simulador Carril</a>.
+</footer>
+
+<script>
+/* ================= utilidades ================= */
+const $ = id => document.getElementById(id);
+const S = { get(k, d) { try { const v = localStorage.getItem('gm-' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+            set(k, v) { try { localStorage.setItem('gm-' + k, JSON.stringify(v)); } catch (e) {} } };
+const fmt = (n, d = 2) => { const r = Number(n.toFixed(d)) + 0; return r.toLocaleString('es-CO', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'); };
+const leer = t => { const s = String(t ?? '').trim().replace('−', '-').replace(',', '.'); return s === '' ? NaN : Number(s); };
+const cerca = (r, v) => Math.abs(r - v) <= Math.max(0.01, 0.02 * Math.abs(v));
+const mezclar = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const SIM = 'https://simuladorfisica.andresjaraafl.workers.dev/';
+
+/* ===== dibujo a mano: trazos irregulares, estables (sin azar real) ===== */
+const ruido = (a, b, c, d) => { const s = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719 + d * 4.581) * 43758.5453; return s - Math.floor(s) - 0.5; };
+function linea(x1, y1, x2, y2, color, ancho = 3) {
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, L = Math.hypot(x2 - x1, y2 - y1), k = Math.min(4, L * 0.03);
+  const nx = -(y2 - y1) / (L || 1), ny = (x2 - x1) / (L || 1);
+  const c1 = ruido(x1, y1, x2, y2) * k, c2 = ruido(y2, x2, y1, x1) * k;
+  return `<path d="M${x1} ${y1} Q${mx + nx * c1 * 2} ${my + ny * c1 * 2} ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="${ancho}" stroke-linecap="round"/>` +
+         `<path d="M${x1 + c2 * .4} ${y1 - c2 * .3} Q${mx - nx * c2} ${my - ny * c2} ${x2 - c1 * .3} ${y2 + c1 * .3}" fill="none" stroke="${color}" stroke-width="${ancho * 0.45}" stroke-linecap="round" opacity=".55"/>`;
+}
+function flecha(x1, y1, x2, y2, color, ancho = 4) {
+  const L = Math.hypot(x2 - x1, y2 - y1); if (L < 3) return '';
+  const ang = Math.atan2(y2 - y1, x2 - x1), p = Math.min(16, 8 + L * 0.08);
+  return linea(x1, y1, x2, y2, color, ancho) + linea(x2, y2, x2 - p * Math.cos(ang - 0.5), y2 - p * Math.sin(ang - 0.5), color, ancho) + linea(x2, y2, x2 - p * Math.cos(ang + 0.5), y2 - p * Math.sin(ang + 0.5), color, ancho);
+}
+function caja(x, y, w, h, relleno = '#fff27a', borde = '#2a2c33') {
+  return `<path d="M${x + 2} ${y + 3} L${x + w - 1} ${y} L${x + w + 2} ${y + h - 2} L${x} ${y + h + 1} Z" fill="${relleno}"/>` +
+    linea(x, y, x + w, y + 1, borde, 2.5) + linea(x + w, y, x + w - 1, y + h, borde, 2.5) + linea(x + w, y + h, x, y + h - 1, borde, 2.5) + linea(x, y + h, x + 1, y, borde, 2.5);
+}
+const rueda = (cx, cy) => `<circle cx="${cx}" cy="${cy}" r="10" fill="#fff" stroke="#2a2c33" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="#2a2c33"/>`;
+const carrito = (x, y, w = 90, h = 44, etiqueta = '') => caja(x, y, w, h) + rueda(x + 20, y + h + 9) + rueda(x + w - 20, y + h + 9) + (etiqueta ? `<text x="${x + w / 2}" y="${y + h / 2 + 8}" text-anchor="middle" font-family="Caveat" font-size="24" font-weight="700" fill="#2a2c33">${etiqueta}</text>` : '');
+const piso = (y, x1 = 20, x2 = 500) => linea(x1, y, x2, y + 1, '#8a8f99', 3);
+const txt = (x, y, t, color = '#2a2c33', size = 22, anchor = 'start') => `<text x="${x}" y="${y}" font-family="Caveat" font-weight="700" font-size="${size}" fill="${color}" text-anchor="${anchor}">${t}</text>`;
+const C = { fa: '#1f3a93', fr: '#d23a2f', v: '#2e7d32', gris: '#6a6f7a', naranja: '#e8771c' };
+
+/* ================= 1. glosario ================= */
+const GLOSARIO = [
+  ['Fuerzas', 'F', 'Fuerza', 'Un empujón o un jalón. Se dibuja como una flecha.', 'Se mide en newtons (N).'],
+  ['Fuerzas', 'Fₐ', 'Fuerza aplicada', 'El empujón que alguien le da al carro, hacia adelante.', 'La «ₐ» pequeñita es de «aplicada».'],
+  ['Fuerzas', 'Fᵣ', 'Fuerza resistiva (roce)', 'La fuerza que frena al carro mientras se desliza. Siempre va en contra del movimiento.', 'La «ᵣ» es de «resistiva». También se llama fricción cinética.'],
+  ['Fuerzas', 'fₛ', 'Fricción estática', 'El «pegue» que no deja que algo quieto empiece a moverse. Vale lo justo para que no se mueva.', 'La «ₛ» es de «estática» (quieto).'],
+  ['Fuerzas', 'Fₛ,máx', 'Fricción estática máxima', 'Lo máximo que aguanta el «pegue». Si empujas más que eso, el objeto arranca.', 'Fₛ,máx = μₛ·N.'],
+  ['Fuerzas', 'μ', 'Coeficiente de fricción («mu»)', 'Un número que dice qué tan «agarrador» es el piso. Hielo: pequeño. Caucho: grande.', 'No tiene unidad.'],
+  ['Fuerzas', 'P', 'Peso', 'La fuerza con que la Tierra jala el carro hacia abajo.', 'P = m·g. Ejemplo: 0,5 kg × 9,8 = 4,9 N.'],
+  ['Fuerzas', 'N (fuerza)', 'Normal', 'La fuerza con que el piso empuja el carro hacia arriba para sostenerlo.', 'Ojo: no es la unidad newton. Mira el contexto.'],
+  ['Fuerzas', 'g', 'Gravedad', 'Qué tan fuerte jala la Tierra cada kilo.', 'g = 9,8 m/s².'],
+  ['Fuerzas', 'Fneta', 'Fuerza neta', 'Lo que sobra cuando el empujón y el roce se enfrentan.', 'Fneta = Fₐ − Fᵣ.'],
+  ['Fuerzas', 'DCL', 'Diagrama de cuerpo libre', 'Dibujo del objeto con TODAS las fuerzas como flechas.', 'En el carril siempre son 4: Fₐ, Fᵣ, P y N.'],
+  ['Fuerzas', 'Inercia', 'Inercia', 'Las cosas tienden a seguir como van: quietas si están quietas, moviéndose si se mueven.', 'Es la primera ley de Newton.'],
+  ['Movimiento', 'm', 'Masa', 'Cuánta materia tiene el carro: qué tan difícil es moverlo.', 'Se mide en kilogramos (kg).'],
+  ['Movimiento', 'x', 'Posición', 'Dónde está el carro en la regla.', 'Se mide en metros (m).'],
+  ['Movimiento', 'x₀', 'Posición inicial', 'Dónde estaba el carro al empezar.', 'El «₀» pequeñito significa «al inicio».'],
+  ['Movimiento', 'Δx', 'Desplazamiento («delta x»)', 'Cuánto avanzó el carro: posición final menos posición inicial.', 'Δx = x − x₀.'],
+  ['Movimiento', 't', 'Tiempo', 'Cuántos segundos han pasado.', 'Se mide en segundos (s).'],
+  ['Movimiento', 'v', 'Velocidad', 'Qué tan rápido va y hacia dónde.', 'Se mide en metros por segundo (m/s).'],
+  ['Movimiento', 'v₀', 'Velocidad inicial', 'Qué tan rápido iba al empezar.', 'Si v₀ = 0, empezó quieto.'],
+  ['Movimiento', 'a', 'Aceleración', 'Cuánto cambia la velocidad cada segundo.', 'Se mide en m/s². Negativa = está frenando.'],
+  ['Movimiento', 'tₚ', 'Tiempo de parada', 'Cuánto tarda en detenerse cuando frena.', 'tₚ = v₀ / |a|.'],
+  ['Movimiento', 'MUA', 'Movimiento uniformemente acelerado', 'Movimiento en que la aceleración no cambia. Es el del carril.', 'También se llama MRUV.'],
+  ['Energía', 'K', 'Energía cinética', 'La energía que tiene algo por estar moviéndose. Quieto: K = 0.', 'K = ½·m·v². Se mide en julios (J).'],
+  ['Energía', 'K₀', 'Energía cinética inicial', 'La energía de movimiento al empezar.', 'K₀ = ½·m·v₀².'],
+  ['Energía', 'ΔK', 'Cambio de energía cinética', 'Cuánta energía de movimiento ganó (+) o perdió (−).', 'ΔK = K − K₀.'],
+  ['Energía', 'W', 'Trabajo', 'Energía que una fuerza le mete o le saca al carro mientras se mueve.', 'W = F·Δx. Se mide en julios (J).'],
+  ['Energía', 'Wneto', 'Trabajo neto', 'La suma de los trabajos de todas las fuerzas.', 'Wneto = Wₐ + Wᵣ = ΔK.'],
+  ['Unidades', 'N (unidad)', 'Newton', 'La unidad de la fuerza.', '1 N = 1 kg·m/s². Más o menos lo que pesa una manzana pequeña.'],
+  ['Unidades', 'J', 'Julio', 'La unidad de la energía y del trabajo.', '1 J = 1 N·m.'],
+  ['Unidades', 'kg', 'Kilogramo', 'La unidad de la masa.', ''],
+  ['Unidades', 'm/s', 'Metros por segundo', 'Unidad de velocidad: cuántos metros avanza en cada segundo.', ''],
+  ['Unidades', 'm/s²', 'Metros por segundo al cuadrado', 'Unidad de aceleración: cuántos m/s gana en cada segundo.', ''],
+  ['Unidades', 'SI', 'Sistema Internacional', 'El acuerdo mundial de unidades: kg, m, s, N, J.', ''],
+  ['Matemáticas', 'Δ', 'Delta', 'Significa «cambio de»: final menos inicial.', 'Δx = cambio de posición.'],
+  ['Matemáticas', '½', 'Un medio', 'La mitad. Multiplicar por ½ es dividir entre 2.', ''],
+  ['Matemáticas', 'x²', 'Al cuadrado', 'El número multiplicado por sí mismo.', '3² = 3 × 3 = 9.'],
+  ['Matemáticas', '√', 'Raíz cuadrada', 'Lo contrario del cuadrado: qué número por sí mismo da eso.', '√9 = 3.'],
+  ['Matemáticas', '|a|', 'Valor absoluto', 'El número sin su signo.', '|−2| = 2.'],
+  ['Matemáticas', '·', 'Por (multiplicar)', 'El punto en medio significa multiplicar.', 'm·g = m por g.'],
+  ['Matemáticas', '→', 'Entonces', 'Una cosa lleva a la otra.', ''],
+  ['Matemáticas', '≥  ≤', 'Mayor o igual / menor o igual', 'Como > y <, pero también vale el igual.', '5 ≥ 5 es verdad.'],
+  ['Palabras', 'Subíndice', 'Letra pequeñita abajo', 'Le pone apellido a un símbolo.', 'v₀: v «inicial». Fₐ: F «aplicada».'],
+  ['Palabras', 'Pendiente', 'Inclinación de una línea', 'Qué tan empinada está la línea de una gráfica.', 'Pendiente de x(t) = velocidad.'],
+  ['Palabras', 'Modelo', 'Versión simplificada', 'Una forma simple de describir la realidad, con reglas (supuestos).', 'El del carril: fuerzas constantes, masa constante y línea recta.'],
+  ['Palabras', 'Supuesto', 'Algo que aceptamos como cierto', 'Una condición que asumimos para poder calcular.', 'Ej.: «el empuje supera la fricción estática».']
+];
+const CATS = ['Todos', 'Fuerzas', 'Movimiento', 'Energía', 'Unidades', 'Matemáticas', 'Palabras'];
+let cat = 'Todos', sabidos = S.get('sabidos', {});
+function pintarGlosario() {
+  const q = $('buscar').value.trim().toLowerCase();
+  $('filtros').innerHTML = CATS.map(c => `<button type="button" class="${c === cat ? 'on' : ''}" data-cat="${c}">${c}</button>`).join('');
+  $('lista-glosario').innerHTML = GLOSARIO.filter(g => (cat === 'Todos' || g[0] === cat) && (!q || g.join(' ').toLowerCase().includes(q))).map(g => `
+    <div class="termino${sabidos[g[1]] ? ' sabe' : ''}">${sabidos[g[1]] ? '<span class="sello">¡ya!</span>' : ''}<div class="simbolo">${g[1]}</div><div class="nombre">${g[2]}</div><div class="simple">${g[3]}</div>${g[4] ? `<div class="extra">${g[4]}</div>` : ''}
+    <label><input type="checkbox" data-sabe="${g[1]}" ${sabidos[g[1]] ? 'checked' : ''}> Ya lo sé</label></div>`).join('') || '<p>No encontré ese término.</p>';
+}
+$('buscar').addEventListener('input', pintarGlosario);
+document.addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (b) { cat = b.dataset.cat; pintarGlosario(); } });
+document.addEventListener('change', e => { const c = e.target.closest('[data-sabe]'); if (c) { sabidos[c.dataset.sabe] = c.checked; S.set('sabidos', sabidos); pintarGlosario(); progreso(); } });
+pintarGlosario();
+
+/* ================= 2. juego ================= */
+let ronda = null;
+function nuevaRonda() {
+  const preguntas = mezclar(GLOSARIO).slice(0, 12).map(g => ({ simbolo: g[1], correcta: g[2], pista: g[3], opciones: mezclar([g, ...mezclar(GLOSARIO.filter(x => x[2] !== g[2])).slice(0, 3)].map(x => x[2])) }));
+  ronda = { preguntas, i: 0, bien: 0, racha: 0, hecho: false }; pintarJuego();
+}
+function pintarJuego() {
+  const caja = $('juego-caja'), mejor = S.get('mejorJuego', 0);
+  if (!ronda) { caja.innerHTML = `<div class="centro"><p class="titulo-q">¿Listo? Mejor puntaje: <span class="resalta">${mejor} de 12</span></p><div class="botones"><button class="primario" id="empezar">Empezar ronda</button></div></div>`; $('empezar').onclick = nuevaRonda; return; }
+  if (ronda.i >= 12) {
+    if (ronda.bien > mejor) S.set('mejorJuego', ronda.bien);
+    caja.innerHTML = `<div class="centro"><p class="grande" style="font-size:56px">${ronda.bien === 12 ? '¡Perfecto!' : ronda.bien + ' de 12'}</p><p>${ronda.bien === 12 ? 'Dominas el idioma. Sigue con los niveles.' : 'Repite hasta lograr 12 de 12.'}</p><div class="botones"><button class="primario" id="otra">Otra ronda</button></div></div>`;
+    $('otra').onclick = nuevaRonda; progreso(); return;
+  }
+  const p = ronda.preguntas[ronda.i]; ronda.hecho = false;
+  caja.innerHTML = `<div class="marcador"><span>Pregunta ${ronda.i + 1} de 12</span><span>Aciertos: ${ronda.bien}</span><span>Racha: ${ronda.racha}</span></div><div class="regla"><div style="width:${ronda.i / 12 * 100}%"></div></div>
+    <div class="grande">${p.simbolo}</div><div class="opciones">${p.opciones.map(o => `<button type="button" data-op="${o}">${o}</button>`).join('')}</div><div id="j-retro"></div>`;
+  caja.querySelectorAll('[data-op]').forEach(b => b.onclick = () => {
+    if (ronda.hecho) return; ronda.hecho = true;
+    const ok = b.dataset.op === p.correcta;
+    if (ok) { ronda.bien++; ronda.racha++; b.classList.add('ok'); } else { ronda.racha = 0; b.classList.add('no'); caja.querySelector(`[data-op="${p.correcta}"]`).classList.add('ok'); }
+    $('j-retro').innerHTML = `<div class="nota-retro ${ok ? 'si' : 'no'}">${ok ? '<b>¡Bien!</b>' : '<b>No.</b>'} <b>${p.simbolo}</b> es <b>${p.correcta}</b>: ${p.pista}</div><div class="botones"><button class="primario" id="sig">Siguiente</button></div>`;
+    $('sig').onclick = () => { ronda.i++; pintarJuego(); };
+  });
+}
+pintarJuego();
+
+/* ================= 3. experimentos ================= */
+function animar(c, durS, dibujar, alTerminar) {
+  const inicio = performance.now();
+  const paso = ahora => { if (!c.isConnected) return; const t = Math.min(durS, (ahora - inicio) / 1000); dibujar(t); if (t < durS) requestAnimationFrame(paso); else if (alTerminar) alTerminar(); };
+  requestAnimationFrame(paso);
+}
+const LABS = {
+  flecha(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: empuja el carrito</p><label>Qué tan fuerte empujas: <span id="l-v"></span></label><input type="range" id="l-r" min="0" max="10" step="0.5" value="3"><svg viewBox="0 0 520 120" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const up = () => { const v = +$('l-r').value; $('l-v').textContent = fmt(v, 1) + ' N';
+      $('l-s').innerHTML = piso(100) + carrito(30, 38, 90, 44) + (v ? flecha(122, 60, 122 + v * 36, 60, C.fa, 4) + txt(130 + v * 18, 46, fmt(v, 1) + ' N', C.fa, 24, 'middle') : '');
+      $('l-o').innerHTML = v === 0 ? 'Sin empujón no hay flecha: <b>no hay fuerza</b>.' : `Empujas con <b>${fmt(v, 1)} N</b>. Más fuerza, flecha más larga. Es como sostener unas ${Math.round(v)} manzanas pequeñas.`; };
+    $('l-r').oninput = up; up();
+  },
+  dcl(c) {
+    const pasos = [['Fa', 'el empujón (fuerza aplicada Fₐ)', 'el empujón va hacia adelante (derecha)'], ['Fr', 'la fuerza que frena (Fᵣ)', 'el roce va en contra del movimiento (izquierda)'], ['P', 'el peso (P)', 'el peso va hacia abajo'], ['N', 'la normal (N)', 'la normal va hacia arriba']];
+    let i = 0;
+    c.innerHTML = `<p class="lab-titulo">Experimento: encuentra las 4 fuerzas</p><p id="l-q"></p><svg viewBox="0 0 520 270" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const zona = (id, contenido, x, y, w, h) => `<g data-f="${id}" style="cursor:pointer">${contenido}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent"/></g>`;
+    $('l-s').innerHTML = piso(200, 40, 480) + carrito(210, 120, 100, 56) +
+      zona('Fa', flecha(312, 140, 440, 140, C.fa, 5), 310, 118, 135, 40) + zona('Fr', flecha(208, 160, 90, 160, C.fr, 5), 80, 140, 130, 40) +
+      zona('N', flecha(260, 118, 260, 30, C.gris, 5), 238, 22, 44, 98) + zona('P', flecha(260, 206, 260, 262, C.gris, 5), 238, 200, 44, 66);
+    const pedir = () => { $('l-q').innerHTML = i < 4 ? `Toca <span class="resalta">${pasos[i][1]}</span>.` : '<b class="bien">¡Las encontraste todas! Eso es un DCL.</b>'; };
+    $('l-s').querySelectorAll('[data-f]').forEach(el => el.addEventListener('click', () => {
+      if (i >= 4) return;
+      if (el.dataset.f === pasos[i][0]) { $('l-o').innerHTML = '<span class="bien">✓ Correcto.</span>'; i++; pedir(); }
+      else $('l-o').innerHTML = `<span class="mal">✗ Esa no.</span> Pista: ${pasos[i][2]}.`;
+    }));
+    pedir();
+  },
+  pesonormal(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: cambia la masa</p><label>Masa: <span id="l-v"></span></label><input type="range" id="l-r" min="0.5" max="10" step="0.5" value="2"><svg viewBox="0 0 520 250" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const up = () => { const m = +$('l-r').value, P = m * 9.8, L = Math.min(90, 20 + P * 0.8); $('l-v').textContent = fmt(m, 1) + ' kg';
+      $('l-s').innerHTML = piso(170, 60, 460) + carrito(210, 105, 100, 52, fmt(m, 1) + ' kg') + flecha(260, 103, 260, 103 - L, C.v, 5) + txt(275, 103 - L / 2, `N = ${fmt(P, 1)} N`, C.v) + flecha(260, 176, 260, 176 + Math.min(L, 70), C.fr, 5) + txt(275, 176 + Math.min(L, 70) / 2 + 8, `P = ${fmt(P, 1)} N`, C.fr);
+      $('l-o').innerHTML = `P = m·g = ${fmt(m, 1)} × 9,8 = <b>${fmt(P, 1)} N</b>. La normal vale lo mismo hacia arriba: <span class="resalta">se anulan</span>.`; };
+    $('l-r').oninput = up; up();
+  },
+  tira(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: tira y afloja</p><label>Empujón Fₐ: <span id="l-a"></span></label><input type="range" id="l-ra" min="0" max="10" step="0.5" value="5"><label>Roce Fᵣ: <span id="l-b"></span></label><input type="range" id="l-rb" min="0" max="10" step="0.5" value="2"><svg viewBox="0 0 520 130" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const up = () => { const a = +$('l-ra').value, b = +$('l-rb').value, n = a - b; $('l-a').textContent = fmt(a, 1) + ' N'; $('l-b').textContent = fmt(b, 1) + ' N';
+      $('l-s').innerHTML = piso(110, 60, 460) + carrito(215, 46, 90, 44) + (a ? flecha(307, 62, 307 + a * 19, 62, C.fa, 5) : '') + (b ? flecha(213, 78, 213 - b * 19, 78, C.fr, 5) : '');
+      $('l-o').innerHTML = `Fneta = ${fmt(a, 1)} − ${fmt(b, 1)} = <b>${fmt(n, 1)} N</b>. ` + (n > 0 ? 'Gana el empujón: el carro <b>acelera</b>.' : n < 0 ? 'Gana el roce: el carro <b>frena</b>.' : '<span class="resalta">Empate</span>: la velocidad no cambia.'); };
+    $('l-ra').oninput = up; $('l-rb').oninput = up; up();
+  },
+  inercia(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: el carro va a 2 m/s. ¿Qué pasa si la fuerza neta es cero?</p><div class="botones"><button data-m="cero" class="primario">Fuerza neta = 0</button><button data-m="roce">Con roce que gana</button></div><svg viewBox="0 0 520 120" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const correr = modo => {
+      const x = t => modo === 'cero' ? 2 * t : Math.min(t, 2) * 2 - 0.5 * Math.min(t, 2) ** 2;
+      $('l-o').textContent = 'Mira las marcas del piso…';
+      animar(c, 3, t => { let marcas = ''; for (let k = 0; k <= t + 1e-9; k += 0.5) marcas += `<circle cx="${40 + x(k) * 70}" cy="96" r="5" fill="${C.naranja}" stroke="#2a2c33" stroke-width="1.5"/>`;
+        $('l-s').innerHTML = piso(96, 20, 510) + marcas + carrito(40 + x(t) * 70 - 35, 40, 70, 36); },
+        () => { $('l-o').innerHTML = modo === 'cero' ? 'Marcas <b>igual de separadas</b>: sigue a 2 m/s para siempre. <span class="resalta">Fuerza neta cero = velocidad constante</span>, no quieto.' : 'Con roce que gana, frena y se detiene. Para cambiar la velocidad <b>hace falta</b> una fuerza neta.'; });
+    };
+    c.querySelectorAll('[data-m]').forEach(b => b.onclick = () => correr(b.dataset.m)); correr('cero');
+  },
+  newton(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: misma fuerza, distinta masa</p><label>Fuerza neta: <span id="l-a"></span></label><input type="range" id="l-ra" min="0" max="10" step="0.5" value="4"><label>Masa: <span id="l-b"></span></label><input type="range" id="l-rb" min="0.5" max="10" step="0.5" value="2"><svg viewBox="0 0 520 110" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const up = () => { const F = +$('l-ra').value, m = +$('l-rb').value, a = F / m; $('l-a').textContent = fmt(F, 1) + ' N'; $('l-b').textContent = fmt(m, 1) + ' kg';
+      const w = 50 + m * 8;
+      $('l-s').innerHTML = piso(97, 20, 500) + carrito(30, 86 - 9 - 30 - m * 2, w, 30 + m * 2, fmt(m, 1) + ' kg') + (a ? flecha(50 + w, 40, 50 + w + Math.min(330, a * 30), 40, C.v, 4) + txt(60 + w, 26, `a = ${fmt(a)} m/s²`, C.v) : '');
+      $('l-o').innerHTML = `a = Fneta / m = ${fmt(F, 1)} / ${fmt(m, 1)} = <b>${fmt(a)} m/s²</b>. ${m >= 6 ? 'Carrito <b>lleno</b>: cuesta acelerarlo.' : m <= 1 ? 'Carrito <b>vacío</b>: acelera fácil.' : 'Mueve la masa y mira la flecha verde.'}`; };
+    $('l-ra').oninput = up; $('l-rb').oninput = up; up();
+  },
+  velocimetro(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: el velocímetro</p><label>Velocidad inicial v₀: <span id="l-a"></span></label><input type="range" id="l-ra" min="0" max="5" step="0.5" value="1"><label>Aceleración a: <span id="l-b"></span></label><input type="range" id="l-rb" min="0" max="3" step="0.5" value="2"><table class="tabla" id="l-t"></table><p class="salida" id="l-o"></p>`;
+    const up = () => { const v0 = +$('l-ra').value, a = +$('l-rb').value; $('l-a').textContent = fmt(v0, 1) + ' m/s'; $('l-b').textContent = fmt(a, 1) + ' m/s²';
+      $('l-t').innerHTML = '<tr><th>t (s)</th>' + [0, 1, 2, 3, 4, 5].map(t => `<td>${t}</td>`).join('') + '</tr><tr><th>v (m/s)</th>' + [0, 1, 2, 3, 4, 5].map(t => `<td><b>${fmt(v0 + a * t, 1)}</b></td>`).join('') + '</tr>';
+      $('l-o').innerHTML = a === 0 ? 'Con a = 0 la velocidad <b>no cambia</b>: no está quieto, va siempre igual de rápido.' : `Cada segundo la velocidad sube <span class="resalta">${fmt(a, 1)} m/s</span>. Por eso v = v₀ + a·t.`; };
+    $('l-ra').oninput = up; $('l-rb').oninput = up; up();
+  },
+  estrobo(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: marcas en el piso cada medio segundo</p><div class="botones"><button data-t="acelera">Acelera</button><button data-t="constante">Velocidad constante</button><button data-t="frena">Frena</button></div><svg viewBox="0 0 520 120" id="l-s"></svg><p class="salida" id="l-o">Toca un botón para lanzar el carro.</p>`;
+    const correr = tipo => {
+      const x = { acelera: t => t * t, constante: t => 2 * t, frena: t => 4 * t - t * t }[tipo];
+      $('l-o').textContent = 'Mira las marcas…';
+      animar(c, 2, t => { let m = ''; for (let k = 0; k <= t + 1e-9; k += 0.5) m += `<circle cx="${40 + x(k) * 105}" cy="96" r="6" fill="${C.naranja}" stroke="#2a2c33" stroke-width="1.5"/>`;
+        $('l-s').innerHTML = piso(96, 20, 510) + m + carrito(40 + x(t) * 105 - 32, 40, 64, 36); },
+        () => { $('l-o').innerHTML = { acelera: 'Marcas <b>cada vez más separadas</b>: en cada medio segundo avanza más. <span class="resalta">Acelera.</span>', constante: 'Marcas <b>igual de separadas</b>: avanza lo mismo cada medio segundo. <span class="resalta">Velocidad constante.</span>', frena: 'Marcas <b>cada vez más juntas</b>: cada vez avanza menos. <span class="resalta">Frena.</span>' }[tipo]; });
+    };
+    c.querySelectorAll('[data-t]').forEach(b => b.onclick = () => correr(b.dataset.t));
+    $('l-s').innerHTML = piso(96, 20, 510) + carrito(8, 40, 64, 36);
+  },
+  distancia(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: parte del reposo. Te dan la aceleración y la distancia</p><label>Aceleración a: <span id="l-a"></span></label><input type="range" id="l-ra" min="0.5" max="4" step="0.5" value="2"><label>Distancia Δx: <span id="l-b"></span></label><input type="range" id="l-rb" min="0.5" max="5" step="0.5" value="1"><p class="salida" id="l-o"></p>`;
+    const up = () => { const a = +$('l-ra').value, dx = +$('l-rb').value, v = Math.sqrt(2 * a * dx), t = Math.sqrt(2 * dx / a); $('l-a').textContent = fmt(a, 1) + ' m/s²'; $('l-b').textContent = fmt(dx, 1) + ' m';
+      $('l-o').innerHTML = `Velocidad al llegar: v² = 0 + 2 × ${fmt(a, 1)} × ${fmt(dx, 1)} = ${fmt(2 * a * dx)} → <b>v = ${fmt(v)} m/s</b><br>Tiempo: Δx = ½·a·t² → t = √(2 × ${fmt(dx, 1)} / ${fmt(a, 1)}) = <b>${fmt(t)} s</b><br><small>Prueba a = 2 y Δx = 1: es el caso A (v = 2 m/s, t = 1 s).</small>`; };
+    $('l-ra').oninput = up; $('l-rb').oninput = up; up();
+  },
+  frenar(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: v₀ = 4 m/s y a = −2 m/s². ¿Qué pasa después de detenerse?</p><div class="botones"><button data-m="ciega">Usar la fórmula a ciegas</button><button data-m="real" class="primario">Lo que pasa de verdad</button></div><svg viewBox="0 0 520 130" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const correr = modo => {
+      const x = t => modo === 'real' ? Math.min(t, 2) * 4 - Math.min(t, 2) ** 2 : 4 * t - t * t;
+      const v = t => modo === 'real' ? Math.max(0, 4 - 2 * t) : 4 - 2 * t;
+      $('l-o').textContent = '…';
+      animar(c, 4, t => { $('l-s').innerHTML = piso(100, 20, 510) + [0, 1, 2, 3, 4].map(d => txt(40 + d * 100, 124, d + ' m', C.gris, 20, 'middle')).join('') + carrito(40 + x(t) * 100 - 32, 44, 64, 36) + txt(20, 24, `t = ${fmt(t, 1)} s`, C.fa) + txt(150, 24, `v = ${fmt(v(t), 1)} m/s`, C.fa); },
+        () => { $('l-o').innerHTML = modo === 'real' ? '<span class="bien">Se detiene a los 2 s en 4 m y se queda quieto.</span> El roce solo frena; nunca empuja hacia atrás. Distancia de frenado: v₀² / (2·|a|) = 16 / 4 = 4 m.' : '<span class="mal">¡El carro se devolvió hasta 0 m!</span> Eso es imposible: el roce no empuja. Por eso el simulador corta la fórmula cuando v = 0.'; });
+    };
+    c.querySelectorAll('[data-m]').forEach(b => b.onclick = () => correr(b.dataset.m)); correr('real');
+  },
+  estatica(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: empujar una nevera (Fₛ,máx = 6 N, roce al deslizar Fᵣ = 4 N, m = 2 kg)</p><label>Tu empujón: <span id="l-v"></span></label><input type="range" id="l-r" min="0" max="10" step="0.5" value="3"><svg viewBox="0 0 520 130" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const up = () => { const F = +$('l-r').value, arranca = F > 6, fr = arranca ? 4 : F, x0 = arranca ? 260 : 220; $('l-v').textContent = fmt(F, 1) + ' N';
+      $('l-s').innerHTML = piso(112, 20, 510) + caja(x0, 40, 70, 70, '#e3eefa') + txt(x0 + 35, 82, 'nevera', '#2a2c33', 20, 'middle') + (F ? flecha(x0 + 72, 64, x0 + 72 + F * 16, 64, C.fa, 4) : '') + (fr ? flecha(x0 - 2, 88, x0 - 2 - fr * 16, 88, C.fr, 4) : '');
+      $('l-o').innerHTML = !arranca ? `<b>No se mueve.</b> La fricción estática vale exactamente ${fmt(F, 1)} N, lo mismo que tu empujón. Fuerza neta = 0. (Aguanta hasta 6 N.)`
+        : `<span class="resalta"><b>¡Arrancó!</b></span> Ahora actúa la fricción <b>cinética</b>, que es menor: 4 N. Fneta = ${fmt(F, 1)} − 4 = ${fmt(F - 4, 1)} N, así que a = ${fmt((F - 4) / 2)} m/s².`; };
+    $('l-r').oninput = up; up();
+  },
+  energia(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: carro de 1 kg</p><label>Velocidad: <span id="l-v"></span></label><input type="range" id="l-r" min="0" max="6" step="0.5" value="2"><div class="regla" style="height:22px"><div id="l-b"></div></div><p class="salida" id="l-o"></p>`;
+    const up = () => { const v = +$('l-r').value, K = 0.5 * v * v; $('l-v').textContent = fmt(v, 1) + ' m/s'; $('l-b').style.width = (K / 18 * 100) + '%';
+      $('l-o').innerHTML = `K = ½ × 1 × ${fmt(v, 1)}² = <b>${fmt(K)} J</b>. Prueba 1, 2 y 4 m/s: da 0,5, 2 y 8 J. <span class="resalta">El doble de rápido, 4 veces la energía.</span>`; };
+    $('l-r').oninput = up; up();
+  },
+  trabajo(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: F = 2 N y el carro avanza 3 m hacia la derecha. ¿Hacia dónde va la fuerza?</p><div class="botones"><button data-d="favor">A favor (→)</button><button data-d="contra">En contra (←)</button><button data-d="lado">De lado (↑)</button></div><svg viewBox="0 0 520 140" id="l-s"></svg><p class="salida" id="l-o"></p>`;
+    const dibujar = d => {
+      const f = { favor: flecha(322, 68, 430, 68, C.fa, 5), contra: flecha(218, 68, 110, 68, C.fr, 5), lado: flecha(270, 44, 270, 4, C.gris, 5) }[d];
+      $('l-s').innerHTML = piso(110, 20, 510) + flecha(40, 132, 170, 132, C.v, 3) + txt(178, 138, 'movimiento', C.v, 20) + carrito(220, 46, 100, 50) + f;
+      $('l-o').innerHTML = { favor: 'W = +2 × 3 = <b class="bien">+6 J</b>. Ayuda al movimiento: <b>mete energía</b>.', contra: 'W = −2 × 3 = <b class="mal">−6 J</b>. Va en contra: <b>saca energía</b> (como el roce).', lado: 'W = <b>0 J</b>. Es perpendicular: ni ayuda ni frena (como el peso y la normal).' }[d];
+    };
+    c.querySelectorAll('[data-d]').forEach(b => b.onclick = () => dibujar(b.dataset.d)); dibujar('favor');
+  },
+  banco(c) {
+    c.innerHTML = `<p class="lab-titulo">Experimento: la cuenta de ahorros de energía (carro de 1 kg a 2 m/s, K₀ = 2 J)</p><label>Empujón Fₐ: <span id="l-a"></span></label><input type="range" id="l-ra" min="0" max="3" step="0.25" value="1"><label>Roce Fᵣ: <span id="l-b"></span></label><input type="range" id="l-rb" min="0" max="3" step="0.25" value="1.5"><label>Distancia Δx: <span id="l-c"></span></label><input type="range" id="l-rc" min="0" max="4" step="0.5" value="2"><p class="salida" id="l-o"></p>`;
+    const up = () => { const Fa = +$('l-ra').value, Fr = +$('l-rb').value, dx = +$('l-rc').value; $('l-a').textContent = fmt(Fa) + ' N'; $('l-b').textContent = fmt(Fr) + ' N'; $('l-c').textContent = fmt(dx, 1) + ' m';
+      const Wa = Fa * dx, Wr = -Fr * dx, K = 2 + Wa + Wr;
+      $('l-o').innerHTML = `<span class="formula">K₀ + Wₐ + Wᵣ = K</span><br>2 + ${fmt(Wa)} + (${fmt(Wr)}) = <b>${fmt(K)} J</b><br>` + (K < 0
+        ? `<span class="mal">¡Imposible! La energía no puede quedar negativa.</span> El carro se detiene antes, a los ${fmt(2 / (Fr - Fa))} m. Por eso el simulador corta el movimiento al detenerse.`
+        : 'Saldo inicial + depósito (empujón) − retiro (roce) = saldo final. Eso es <span class="resalta">Wneto = ΔK</span>.'); };
+    ['l-ra', 'l-rb', 'l-rc'].forEach(id => $(id).oninput = up); up();
+  },
+  graficas(c) {
+    const g = (path, tit) => `<svg viewBox="0 0 160 112">${linea(20, 90, 150, 90, '#2a2c33', 2)}${linea(20, 10, 20, 90, '#2a2c33', 2)}${txt(6, 18, 'v', C.gris, 18)}${txt(142, 106, 't', C.gris, 18)}<path d="${path}" fill="none" stroke="${C.v}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${txt(84, 108, tit, '#2a2c33', 20, 'middle')}</svg>`;
+    const G = { A: g('M20 86 Q80 55 145 20', 'A'), B: g('M20 50 Q80 48 145 51', 'B'), C: g('M20 20 L84 88 L145 88', 'C') };
+    const retos = [['¿Cuál es del carro que <b>frena y se detiene</b>?', 'C', 'La velocidad baja hasta cero y se queda en cero.'], ['¿Cuál es del carro que <b>acelera</b>?', 'A', 'La velocidad sube.'], ['¿Cuál va a <b>velocidad constante</b>?', 'B', 'La línea es plana: la velocidad no cambia.']];
+    let k = 0;
+    const pinta = () => {
+      if (k >= retos.length) { c.innerHTML = '<p class="lab-titulo">Experimento: lee gráficas de velocidad</p><p class="salida bien">¡Las tres bien! Sube: acelera. Plana: constante. Baja a cero: frena y para.</p>'; return; }
+      c.innerHTML = `<p class="lab-titulo">Experimento: lee gráficas de velocidad</p><p class="salida">${retos[k][0]}</p><div class="grafs">${['A', 'B', 'C'].map(x => `<button type="button" data-g="${x}">${G[x]}</button>`).join('')}</div><p id="l-o"></p>`;
+      c.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
+        if (b.dataset.g === retos[k][1]) { b.classList.add('ok'); $('l-o').innerHTML = `<span class="bien">✓ ${retos[k][2]}</span>`; setTimeout(() => { if (c.isConnected) { k++; pinta(); } }, 1300); }
+        else { b.classList.add('no'); $('l-o').innerHTML = '<span class="mal">✗ Esa no.</span> Mira si la línea sube, es plana o baja.'; }
+      });
+    };
+    pinta();
+  },
+  unidades(c) {
+    const retos = [['kg × m/s²', 'N', 'Masa por aceleración es fuerza: 1 N = 1 kg·m/s².'], ['N × m', 'J', 'Fuerza por distancia es trabajo o energía: 1 J = 1 N·m.'], ['N ÷ kg', 'm/s²', 'Fuerza entre masa es aceleración (a = F/m).'], ['m/s × s', 'm', 'Velocidad por tiempo es distancia.'], ['kg × (m/s)²', 'J', '½·m·v² es energía: kg·m²/s² = J.']];
+    let k = 0;
+    const pinta = () => {
+      if (k >= retos.length) { c.innerHTML = '<p class="lab-titulo">Experimento: arma la unidad</p><p class="salida bien">¡Bien! Si al final de un ejercicio la unidad no te da, hay un error en alguna parte.</p>'; return; }
+      c.innerHTML = `<p class="lab-titulo">Experimento: arma la unidad (${k + 1} de ${retos.length})</p><p class="titulo-q">${retos[k][0]} = ?</p><div class="botones">${mezclar(['N', 'J', 'm/s²', 'm', 'kg']).map(u => `<button data-u="${u}">${u}</button>`).join('')}</div><p class="salida" id="l-o"></p>`;
+      c.querySelectorAll('[data-u]').forEach(b => b.onclick = () => {
+        if (b.dataset.u === retos[k][1]) { $('l-o').innerHTML = `<span class="bien">✓ ${retos[k][2]}</span>`; setTimeout(() => { if (c.isConnected) { k++; pinta(); } }, 1400); }
+        else $('l-o').innerHTML = '<span class="mal">✗ Esa no.</span> Piensa qué fórmula multiplica esas dos cosas.';
+      });
+    };
+    pinta();
+  },
+  modelo(c) {
+    const items = [
+      ['Un carro sobre un carril horizontal, empujado con fuerza constante', true, 'Cumple: línea recta, horizontal y fuerzas constantes.'],
+      ['Un carro bajando por una rampa', false, 'No cumple: el carril ya no es horizontal y el peso empieza a empujarlo.'],
+      ['Un cohete que va gastando combustible', false, 'No cumple: su masa cambia, y el modelo supone masa constante.'],
+      ['Un carro que da una curva', false, 'No cumple: el modelo es de movimiento en línea recta.'],
+      ['Un carro a 100 m/s, donde el aire frena cada vez más', false, 'No cumple: la fuerza del aire cambia con la rapidez y el modelo supone fuerzas constantes.'],
+      ['Un bloque que frena por el roce hasta detenerse', true, 'Cumple: el roce es constante mientras desliza.']
+    ];
+    let hechos = 0;
+    c.innerHTML = '<p class="lab-titulo">Experimento: ¿cumple el modelo del carril?</p>' + items.map((it, i) => `<div class="item" data-i="${i}"><span>${it[0]}</span><div class="botones"><button data-r="1">Cumple</button><button data-r="0">No cumple</button></div><div class="res"></div></div>`).join('') + '<p class="salida" id="l-o"></p>';
+    c.querySelectorAll('.item').forEach(el => el.querySelectorAll('[data-r]').forEach(b => b.onclick = () => {
+      const it = items[+el.dataset.i], ok = (b.dataset.r === '1') === it[1];
+      el.querySelector('.res').innerHTML = `<span class="${ok ? 'bien' : 'mal'}">${ok ? '✓' : '✗'} ${it[1] ? 'Cumple' : 'No cumple'}.</span> ${it[2]}`;
+      if (ok && !el.dataset.ok) { el.dataset.ok = 1; hechos++; }
+      if (hechos === items.length) $('l-o').innerHTML = '<b class="bien">¡Los 6 bien! Ya sabes cuándo sirve el modelo y cuándo no.</b>';
+    }));
+  },
+  bloqueo(c) {
+    const items = [
+      ['Masa = 0 kg', true, 'Imposible: a = F/m y no se puede dividir entre 0.'],
+      ['Caso A: m = 0,5 kg, Fₐ = 1,2 N, Fᵣ = 0,2 N', false, 'Todo es físicamente posible.'],
+      ['Resistencia Fᵣ = −1 N', true, 'Imposible: un roce negativo empujaría. El roce solo frena.'],
+      ['Empujón Fₐ = 0 N', false, 'Posible: simplemente nadie empuja.'],
+      ['Velocidad inicial v₀ = −3 m/s', true, 'Fuera del modelo: iría hacia atrás y el roce cambiaría de sentido.'],
+      ['Tiempo de análisis = 0 s', true, 'Imposible: no hay nada que analizar.'],
+      ['Fₛ,máx = 0,3 N con Fᵣ = 0,5 N', true, 'Imposible: cuesta más arrancar que mantener el movimiento, así que la estática no puede ser menor.'],
+      ['0,1 kg empujado con 5 N durante 30 s', true, 'Resultado irreal: llegaría a 1.500 m/s. A más de 20 m/s el aire frena distinto.'],
+      ['Posición inicial x₀ = −2 m', false, 'Posible: es solo dónde empieza en la regla.']
+    ];
+    let hechos = 0;
+    c.innerHTML = '<p class="lab-titulo">Experimento: ¿el simulador lo bloquea o lo acepta?</p>' + items.map((it, i) => `<div class="item" data-i="${i}"><span>${it[0]}</span><div class="botones"><button data-r="1">Lo bloquea</button><button data-r="0">Lo acepta</button></div><div class="res"></div></div>`).join('') + '<p class="salida" id="l-o"></p>';
+    c.querySelectorAll('.item').forEach(el => el.querySelectorAll('[data-r]').forEach(b => b.onclick = () => {
+      const it = items[+el.dataset.i], ok = (b.dataset.r === '1') === it[1];
+      el.querySelector('.res').innerHTML = `<span class="${ok ? 'bien' : 'mal'}">${ok ? '✓' : '✗'} ${it[1] ? 'Lo bloquea' : 'Lo acepta'}.</span> ${it[2]}`;
+      if (ok && !el.dataset.ok) { el.dataset.ok = 1; hechos++; }
+      if (hechos === items.length) $('l-o').innerHTML = '<b class="bien">¡Los 9 bien! Ya sabes qué es imposible y por qué.</b>';
+    }));
+  },
+  casos(c) {
+    const CASOS = {
+      A: { dat: 'm = 0,50 kg; Fₐ = 1,20 N; Fᵣ = 0,20 N; parte del reposo; recorre Δx = 1,00 m', pasos: [
+        ['Fuerza neta', 'Fₐ − Fᵣ', 'N', 1], ['Aceleración', 'Fneta / m', 'm/s²', 2], ['Tiempo para recorrer 1 m', 'Δx = ½·a·t²', 's', 1], ['Velocidad final', 'v = a·t', 'm/s', 2],
+        ['Energía cinética final', '½·m·v²', 'J', 1], ['Trabajo del empuje', 'Fₐ·Δx', 'J', 1.2], ['Trabajo del roce', '−Fᵣ·Δx', 'J', -0.2], ['Trabajo neto', 'Wₐ + Wᵣ (= ΔK)', 'J', 1]] },
+      B: { dat: 'm = 0,50 kg; Fₐ = Fᵣ = 0,30 N; va a v₀ = 1,0 m/s; durante t = 2,0 s', pasos: [
+        ['Fuerza neta', 'Fₐ − Fᵣ', 'N', 0], ['Aceleración', 'Fneta / m', 'm/s²', 0], ['Distancia recorrida', 'v₀·t', 'm', 2], ['Velocidad final', 'v₀ + a·t', 'm/s', 1],
+        ['Cambio de energía cinética', 'K − K₀', 'J', 0], ['Trabajo del empuje', 'Fₐ·Δx', 'J', 0.6], ['Trabajo del roce', '−Fᵣ·Δx', 'J', -0.6]] },
+      C: { dat: 'm = 0,50 kg; nadie empuja (Fₐ = 0); Fᵣ = 0,50 N; va a v₀ = 2,0 m/s', pasos: [
+        ['Fuerza neta', 'Fₐ − Fᵣ', 'N', -0.5], ['Aceleración', 'Fneta / m', 'm/s²', -1], ['Tiempo hasta detenerse', 'v₀ / |a|', 's', 2], ['Distancia de frenado', 'v₀² / (2·|a|)', 'm', 2],
+        ['Cambio de energía cinética', '0 − ½·m·v₀²', 'J', -1], ['Trabajo del roce', '−Fᵣ·Δx', 'J', -1]] }
+    };
+    let actual = 'A';
+    const pinta = () => {
+      const caso = CASOS[actual];
+      c.innerHTML = `<p class="lab-titulo">Experimento: resuelve el caso ${actual} paso a paso</p><div class="botones">${Object.keys(CASOS).map(k => `<button data-c="${k}" class="${k === actual ? 'primario' : ''}">Caso ${k}</button>`).join('')}</div>
+        <div class="postit azul"><span class="etq">Datos</span>${caso.dat}</div>
+        ${caso.pasos.map((p, i) => `<div class="paso"><span><b>${i + 1}. ${p[0]}</b><small>${p[1]}</small></span><span class="campo"><input data-p="${i}" inputmode="decimal" aria-label="${p[0]}"><span>${p[2]}</span></span><span class="marca" id="m${i}"></span></div>`).join('')}
+        <div class="botones"><button class="primario" id="comp">Comprobar</button><button id="sol">Ver solución</button></div><p class="salida" id="l-o"></p>`;
+      c.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { actual = b.dataset.c; pinta(); });
+      $('comp').onclick = () => { let bien = 0;
+        caso.pasos.forEach((p, i) => { const r = leer(c.querySelector(`[data-p="${i}"]`).value), m = $('m' + i);
+          if (!Number.isFinite(r)) { m.innerHTML = '<span class="mal">falta</span>'; return; }
+          if (cerca(r, p[3])) { m.innerHTML = '<span class="bien">✓</span>'; bien++; } else m.innerHTML = '<span class="mal">✗ revisa</span>'; });
+        $('l-o').innerHTML = bien === caso.pasos.length ? `<b class="bien">¡Caso ${actual} resuelto completo!</b> Ahora escríbelo en tu cuaderno con el DCL y las unidades.` : `${bien} de ${caso.pasos.length} bien. Revisa los marcados en rojo.`; };
+      $('sol').onclick = () => { caso.pasos.forEach((p, i) => { c.querySelector(`[data-p="${i}"]`).value = fmt(p[3]); $('m' + i).innerHTML = '<span class="mal">(solución)</span>'; }); };
+    };
+    pinta();
+  },
+  simulador(c) {
+    const tareas = [
+      ['C', 'Abre el <b>caso C</b> y dale reproducir.', 'La velocidad baja a 0 a los 2 s y el carro se queda quieto: no retrocede.'],
+      ['C', 'Mira las <b>marcas naranjas</b> del piso en el caso C.', 'Quedan cada vez más juntas porque el carro frena.'],
+      ['A', 'Abre el <b>caso A</b> y lee el aviso naranja de arriba.', 'Es el supuesto: como parte quieto, supone que el empuje supera la fricción estática.'],
+      ['explorar', 'Escribe <b>masa 0</b> en el panel de datos.', 'El simulador lo bloquea en rojo y explica por qué.'],
+      ['explorar', 'En la pestaña <b>Fuerzas</b>, toca «Duplicar la masa».', 'El carro nuevo acelera menos; el punteado es la corrida anterior.']
+    ];
+    const hechas = S.get('tareasSim', {});
+    c.innerHTML = '<p class="lab-titulo">Experimento: úsalo en el simulador Carril</p>' + tareas.map((t, i) => `<div class="tarea"><input type="checkbox" data-t="${i}" ${hechas[i] ? 'checked' : ''} aria-label="Hecho"><span>${t[1]} <a class="enlace-sim" href="${SIM}#${t[0]}" target="_blank" rel="noopener">Abrir</a><br><small>Lo que debes ver: ${t[2]}</small></span></div>`).join('');
+    c.querySelectorAll('[data-t]').forEach(x => x.onchange = () => { hechas[x.dataset.t] = x.checked; S.set('tareasSim', hechas); });
+  }
+};
+
+/* ================= niveles ================= */
+const NIVELES = [
+  { t: '¿Qué es una fuerza?', idea: 'Una <b>fuerza</b> es un empujón o un jalón. Tiene tamaño (qué tan fuerte) y dirección (hacia dónde). Se dibuja como una <span class="resalta">flecha</span>.', ej: 'Como empujar un carrito de mercado: más fuerte, flecha más larga.', lab: 'flecha',
+    q: [['¿Cómo se dibuja una fuerza?', ['Con una flecha', 'Con un círculo', 'Solo con un número'], 'La flecha muestra a la vez qué tan fuerte (largo) y hacia dónde (punta).'],
+        ['¿En qué unidad se mide una fuerza?', ['Newtons (N)', 'Kilogramos (kg)', 'Metros por segundo (m/s)'], 'Las fuerzas se miden en newtons. Los kilogramos son de masa.']] },
+  { t: 'Las 4 fuerzas del carrito', idea: 'El <b>DCL</b> (diagrama de cuerpo libre) es el dibujo del carro con TODAS sus fuerzas. En el carril siempre son 4: <b>Fₐ</b> (empujón →), <b>Fᵣ</b> (roce ←), <b>P</b> (peso ↓) y <b>N</b> (normal ↑).', ej: 'Truco: las horizontales mueven; las verticales sostienen.', lab: 'dcl',
+    q: [['El carro va hacia la derecha. ¿Hacia dónde apunta el roce Fᵣ?', ['Hacia la izquierda', 'Hacia la derecha', 'Hacia abajo'], 'El roce siempre va en contra del movimiento.'],
+        ['¿Cuántas fuerzas tiene el DCL del carril?', ['4', '2', '3'], 'Empujón, roce, peso y normal. El peso y la normal también se dibujan.']] },
+  { t: 'Peso y normal se anulan', idea: 'La Tierra jala el carro hacia abajo: es el <b>peso</b>. El piso lo empuja hacia arriba igual de fuerte: es la <b>normal</b>. Como son iguales y opuestas, <span class="resalta">se anulan</span>.', f: 'P = m·g   (g = 9,8 m/s²)', ej: 'Como tú parado en el piso: la Tierra te jala, el piso te sostiene y no te hundes.', ojo: 'N (la normal) no es lo mismo que N (newton, la unidad). «N = 4,9 N» quiere decir «la normal vale 4,9 newtons».', lab: 'pesonormal',
+    q: [['Si la masa es 2 kg, ¿cuánto vale el peso?', ['19,6 N', '2 N', '9,8 N'], 'P = m·g = 2 × 9,8 = 19,6 N.'],
+        ['¿Por qué el peso y la normal no cambian el movimiento en el carril?', ['Porque se anulan entre sí', 'Porque son muy pequeñas', 'Porque no existen'], 'Son iguales y en sentido contrario: su suma es cero.']] },
+  { t: 'Fuerza neta: ¿quién gana?', idea: 'La <b>fuerza neta</b> es lo que sobra cuando el empujón y el roce se enfrentan.', f: 'Fneta = Fₐ − Fᵣ', ej: 'Como un tira y afloja: gana el que tira más fuerte, y solo cuenta la diferencia.', lab: 'tira',
+    q: [['Fₐ = 3 N y Fᵣ = 1 N. ¿Cuánto vale la fuerza neta?', ['2 N', '4 N', '3 N'], 'Se restan porque van en sentidos contrarios: 3 − 1 = 2 N.'],
+        ['Fₐ = 1 N y Fᵣ = 1 N. ¿Cuánto vale la fuerza neta?', ['0 N', '2 N', '1 N'], 'Empate: 1 − 1 = 0.']] },
+  { t: 'Primera ley de Newton: la inercia', idea: 'Si la fuerza neta es cero, el carro <b>no cambia su velocidad</b>: si estaba quieto sigue quieto, y si se movía sigue igual de rápido.', ej: 'Como un disco de hockey sobre hielo: una vez lo golpeas, sigue y sigue casi sin frenar.', ojo: 'Fuerza neta cero NO significa quieto. Significa velocidad constante.', lab: 'inercia',
+    q: [['Un disco se desliza sobre hielo sin roce y nadie lo empuja. ¿Qué hace?', ['Sigue con la misma velocidad', 'Se detiene poco a poco', 'Acelera'], 'Sin fuerza neta, la velocidad no cambia.'],
+        ['Fₐ = Fᵣ y el carro va a 2 m/s. ¿A cuánto va 5 s después?', ['A 2 m/s', 'A 0 m/s', 'A 7 m/s'], 'Fuerza neta cero, aceleración cero: sigue a 2 m/s.']] },
+  { t: 'Masa y aceleración: segunda ley', idea: 'La fuerza neta <b>acelera</b> al carro. Pero entre más masa, menos acelera.', f: 'a = Fneta / m', ej: 'Carrito de mercado vacío contra lleno: con el mismo empujón, el vacío sale disparado.', lab: 'newton',
+    q: [['Fneta = 4 N y m = 2 kg. ¿Cuánto vale a?', ['2 m/s²', '8 m/s²', '6 m/s²'], 'a = 4 / 2 = 2 m/s².'],
+        ['Si la masa se duplica y la fuerza neta es la misma, la aceleración…', ['Se reduce a la mitad', 'Se duplica', 'Queda igual'], 'Divides entre el doble: da la mitad.']] },
+  { t: 'Velocidad y aceleración', idea: 'La <b>velocidad</b> es qué tan rápido vas (m/s). La <b>aceleración</b> es cuánto cambia la velocidad cada segundo (m/s²).', f: 'v = v₀ + a·t', ej: 'El velocímetro de una moto: si cada segundo marca 2 más, la aceleración es 2 m/s².', lab: 'velocimetro',
+    q: [['v₀ = 1 m/s y a = 2 m/s². ¿Cuánto vale v a los 3 s?', ['7 m/s', '6 m/s', '5 m/s'], 'v = 1 + 2 × 3 = 7 m/s.'],
+        ['Si a = 0, la velocidad…', ['Se queda igual', 'Es cero', 'Aumenta'], 'Sin aceleración, la velocidad no cambia.']] },
+  { t: '¿Dónde está? La posición', idea: '<b>x</b> es dónde está el carro en la regla. <b>Δx</b> («delta x») es cuánto avanzó: posición final menos inicial.', f: 'x = x₀ + v₀·t + ½·a·t²', ej: 'Desde el reposo con a = 2 m/s²: en 1 s va en 1 m, en 2 s va en 4 m. Cada segundo avanza más.', lab: 'estrobo',
+    q: [['Parte del reposo con a = 2 m/s². ¿Cuánto avanza en 1 s?', ['1 m', '2 m', '4 m'], 'Δx = ½ × 2 × 1² = 1 m. ¡No olvides el ½!'],
+        ['Las marcas del piso quedan cada vez más juntas. El carro…', ['Frena', 'Acelera', 'Va a velocidad constante'], 'Si cada vez avanza menos en el mismo tiempo, va más despacio.']] },
+  { t: 'Me dan la distancia, no el tiempo', idea: 'Si conoces la distancia y no el tiempo, hay una fórmula que da la velocidad directo. Y desde el reposo, el tiempo sale de Δx = ½·a·t².', f: 'v² = v₀² + 2·a·Δx', ej: 'Caso A: parte quieto, a = 2 m/s², recorre 1 m. v² = 2 × 2 × 1 = 4, así que v = 2 m/s. Y t = √(2 × 1 / 2) = 1 s.', lab: 'distancia',
+    q: [['Parte del reposo con a = 2 m/s² y recorre 1 m. ¿Con qué velocidad llega?', ['2 m/s', '4 m/s', '1 m/s'], 'v² = 0 + 2 × 2 × 1 = 4 → v = 2 m/s.'],
+        ['En ese mismo caso, ¿cuánto tardó?', ['1 s', '2 s', '0,5 s'], '1 = ½ × 2 × t² → t² = 1 → t = 1 s.']] },
+  { t: 'Frenar y quedarse quieto', idea: 'Si el roce gana, la aceleración es negativa: el carro <b>frena</b>. Cuando la velocidad llega a 0, <span class="resalta">se queda quieto</span>. No retrocede: el roce solo frena, nunca empuja.', f: 'tₚ = v₀ / |a|      distancia = v₀² / (2·|a|)', ej: 'Como una bicicleta que dejas de pedalear: se detiene y ahí se queda; no se devuelve sola.', lab: 'frenar',
+    q: [['v₀ = 4 m/s y a = −2 m/s². ¿Cuándo se detiene?', ['A los 2 s', 'A los 8 s', 'A los 0,5 s'], 'tₚ = 4 / 2 = 2 s.'],
+        ['La fórmula v = v₀ + a·t a los 3 s da −2 m/s. ¿Qué pasa de verdad?', ['Sigue quieto, con v = 0', 'Retrocede a 2 m/s', 'Vuelve a acelerar'], 'Después de detenerse ya no se usa esa fórmula: queda quieto.']] },
+  { t: 'Fricción estática y cinética', idea: 'Cuesta más <b>arrancar</b> algo que mantenerlo moviéndose. Quieto actúa la fricción <b>estática</b> (fₛ), que aguanta hasta un máximo. Moviéndose actúa la <b>cinética</b> (Fᵣ), que es menor.', ej: 'Como empujar una nevera: al principio no se mueve; cuando por fin arranca, ya es más fácil seguirla empujando.', lab: 'estatica',
+    q: [['Un bloque está quieto, Fₛ,máx = 6 N y lo empujas con 4 N. ¿Qué pasa?', ['No se mueve; la estática vale 4 N', 'Se mueve con a = 2 m/s²', 'No se mueve; la estática vale 6 N'], 'La estática vale lo justo para que no se mueva: 4 N.'],
+        ['¿Por qué el simulador avisa cuando el carro arranca desde el reposo?', ['Porque no conoce la fricción estática máxima y supone que el empuje la supera', 'Porque hay un error', 'Porque la masa es cero'], 'Para saber si arranca hace falta μₛ, y no se conoce. Por eso lo supone y lo dice.']] },
+  { t: 'Energía cinética', idea: 'La <b>energía cinética</b> (K) es la energía por moverse. Quieto, K = 0. Se mide en julios (J).', f: 'K = ½·m·v²', ej: 'Un balón lento contra uno rápido: el rápido «golpea» con mucha más energía.', ojo: 'v va al cuadrado: el doble de rápido son 4 veces la energía.', lab: 'energia',
+    q: [['m = 2 kg y v = 3 m/s. ¿Cuánto vale K?', ['9 J', '6 J', '18 J'], 'K = ½ × 2 × 3² = ½ × 2 × 9 = 9 J.'],
+        ['Si la velocidad se duplica, K…', ['Se multiplica por 4', 'Se duplica', 'Queda igual'], 'Porque v está al cuadrado: 2² = 4.']] },
+  { t: 'Trabajo: quién mete y quién saca energía', idea: 'El <b>trabajo</b> (W) es la energía que una fuerza le mete o le saca al carro mientras se mueve.', f: 'W = F·Δx', ej: 'Regla de los signos: a favor del movimiento, + (mete). En contra, − (saca). De lado, 0.', lab: 'trabajo',
+    q: [['Fᵣ = 0,5 N y Δx = 2 m. ¿Cuánto vale el trabajo del roce?', ['−1 J', '+1 J', '0 J'], 'Wᵣ = −Fᵣ·Δx = −0,5 × 2 = −1 J.'],
+        ['¿Cuánto trabajo hace el peso en el carril?', ['0 J', 'Negativo', 'm·g·Δx'], 'El peso es perpendicular al movimiento.']] },
+  { t: 'Wneto = ΔK: la cuenta de ahorros', idea: 'La energía al final es la del inicio, más lo que mete el empujón, más lo que saca el roce (que es negativo).', f: 'K₀ + Wₐ + Wᵣ = K   →   Wneto = ΔK', ej: 'Como una cuenta de ahorros: saldo inicial + depósito − retiro = saldo final.', lab: 'banco',
+    q: [['K₀ = 1 J, Wₐ = 1,5 J y Wᵣ = −2,5 J. ¿Cuánto vale K al final?', ['0 J', '5 J', '2 J'], '1 + 1,5 − 2,5 = 0 J: terminó quieto.'],
+        ['¿Por qué «Wneto = ΔK» en el simulador NO es una validación?', ['Porque los dos salen de las mismas ecuaciones y siempre coinciden', 'Porque está mal calculado', 'Porque falta la gravedad'], 'La validación real es comparar con soluciones hechas a mano.']] },
+  { t: 'Leer gráficas', idea: 'La <b>pendiente</b> es qué tan inclinada está una línea. La pendiente de x(t) es la velocidad. La pendiente de v(t) es la aceleración. El <b>área</b> bajo v(t) es la distancia recorrida.', ej: 'Caso C: v(t) es un triángulo de 2 s de base y 2 m/s de alto. Su área es ½ × 2 × 2 = 2 m: lo mismo que recorrió.', lab: 'graficas',
+    q: [['En v(t) la línea es plana a la altura de 2 m/s. El carro…', ['Va a velocidad constante', 'Está acelerando', 'Está quieto'], 'Línea plana: la velocidad no cambia.'],
+        ['¿Qué representa el área bajo la gráfica de velocidad?', ['La distancia recorrida', 'La aceleración', 'La fuerza'], 'Velocidad por tiempo da distancia.']] },
+  { t: 'Unidades: la prueba de que vas bien', idea: 'Cada resultado lleva su unidad. Si al final la unidad no da la que esperas, <span class="resalta">hay un error</span>.', f: '1 N = 1 kg·m/s²      1 J = 1 N·m', ej: 'a = F/m → N ÷ kg = m/s². K = ½·m·v² → kg·(m/s)² = J.', lab: 'unidades',
+    q: [['¿A qué es igual 1 N?', ['1 kg·m/s²', '1 kg·m', '1 J/s'], 'Fuerza = masa × aceleración.'],
+        ['Calculaste una energía y te dio en kg·m/s. ¿Qué pasa?', ['Hay un error: la energía da en kg·m²/s² = J', 'Está bien', 'Es una velocidad, también vale'], 'La unidad delata el error.']] },
+  { t: '¿Qué es un modelo? Los supuestos', idea: 'Un <b>modelo</b> es una versión simple de la realidad que sirve para calcular. El del carril supone: <span class="resalta">fuerzas horizontales constantes, masa constante y movimiento en línea recta</span>.', ej: 'Ignora cosas pequeñas, como el aire a baja velocidad o que el roce cambie un poquito. A cambio, se puede calcular a mano.', lab: 'modelo',
+    q: [['¿Cuál NO cumple el modelo del carril?', ['Un carro bajando por una rampa', 'Un carro en carril horizontal con empuje constante', 'Un bloque que frena por el roce'], 'En una rampa el carril no es horizontal.'],
+        ['¿Por qué se dice que es un modelo «simplificado»?', ['Porque ignora efectos pequeños para poder calcular', 'Porque está mal', 'Porque es un juego'], 'Simplificar no es equivocarse: es elegir qué importa.']] },
+  { t: 'Lo que el simulador bloquea', idea: '<b>Imposible:</b> masa 0 o negativa, fuerzas negativas, tiempo 0, fricción estática menor que la cinética. <b>Fuera del modelo:</b> velocidad inicial negativa, valores gigantes o un resultado de más de 20 m/s.', ej: 'Por qué 20 m/s: a esa rapidez el aire frena cada vez más fuerte, y el modelo supone fuerzas constantes.', lab: 'bloqueo',
+    q: [['¿Por qué no se acepta masa 0?', ['Porque a = F/m y no se puede dividir entre 0', 'Porque 0 es muy poquito', 'Porque no existen carros livianos'], 'Dividir entre cero no da ningún número.'],
+        ['¿Por qué se bloquea un resultado de más de 20 m/s?', ['Porque el aire frenaría distinto y las fuerzas ya no serían constantes', 'Porque el computador no puede calcularlo', 'Porque está prohibido'], 'Es una condición de validez del modelo.']] },
+  { t: 'Los casos A, B y C, paso a paso', idea: 'Todo junto: con la receta (DCL → fuerza neta → aceleración → movimiento → energía → trabajos) se resuelven los tres casos de referencia. Escribe tú cada número.', ej: 'Usa coma o punto. Si un paso te sale mal, vuelve al nivel de esa idea.', lab: 'casos',
+    q: [['En el caso B (Fₐ = Fᵣ), ¿qué concluyes?', ['Va a velocidad constante y su energía cinética no cambia', 'Se detiene a los 2 s', 'Acelera a 1 m/s²'], 'Fuerza neta cero: a = 0, v constante y ΔK = 0.'],
+        ['En el caso C, ¿por qué el trabajo del empuje es cero?', ['Porque no hay empuje (Fₐ = 0)', 'Porque el carro se detiene', 'Porque el empuje es perpendicular'], 'W = Fₐ·Δx = 0 × 2 = 0.']] },
+  { t: 'Úsalo en el simulador', idea: 'El simulador Carril muestra en vivo todo lo que aprendiste: fuerzas como flechas, marcas en el piso, gráficas y energía.', ej: 'Haz cada tarea en el simulador y marca cuando veas lo que se describe.', lab: 'simulador',
+    q: [['En el simulador, ¿qué muestran las marcas naranjas del piso?', ['Dónde estaba el carro cada cierto tiempo', 'Dónde va a frenar', 'El tamaño de la fuerza'], 'Su separación muestra si acelera, va constante o frena.'],
+        ['Una flecha roja punteada en el simulador significa…', ['Fricción estática: el carro está quieto', 'Una fuerza que se está acabando', 'Un error'], 'Quieto actúa la estática, que iguala al empuje.']] }
+];
+
+let nivelActual = 0, pasados = S.get('pasados', {}), docente = S.get('docente', false);
+$('modo-docente').checked = docente;
+$('modo-docente').onchange = e => { docente = e.target.checked; S.set('docente', docente); pintarNiveles(); pintarNivel(); $('aviso-docente').textContent = docente ? 'Listo: los 20 niveles están desbloqueados. Elige uno en la lista o en «Ir al nivel».' : 'Modo docente apagado: los niveles se desbloquean al superar el anterior.'; };
+const desbloqueado = i => docente || i === 0 || pasados[i - 1];
+function pintarNiveles() {
+  $('lista-niveles').innerHTML = NIVELES.map((n, i) => `<li><button type="button" class="${i === nivelActual ? 'actual' : ''}" data-n="${i}" ${desbloqueado(i) ? '' : 'disabled'}>
+    <span class="caja-check">${pasados[i] ? '✓' : ''}</span><span>${i + 1}. ${n.t}</span></button></li>`).join('');
+  $('lista-niveles').querySelectorAll('[data-n]').forEach(b => b.onclick = () => irANivel(+b.dataset.n));
+}
+function irANivel(i) {
+  nivelActual = i; pintarNivel(); pintarNiveles();
+  $('nivel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function pintarNivel() {
+  const n = NIVELES[nivelActual], resp = [false, false];
+  $('nivel').innerHTML = `<div class="ir-nivel"><span class="num-nivel">Nivel ${nivelActual + 1} de ${NIVELES.length}</span><label>Ir al nivel <select id="sel-nivel">${NIVELES.map((x, i) => `<option value="${i}" ${i === nivelActual ? 'selected' : ''} ${desbloqueado(i) ? '' : 'disabled'}>${i + 1}. ${x.t}${desbloqueado(i) ? '' : ' (bloqueado)'}</option>`).join('')}</select></label></div><h2>${n.t}</h2><p class="idea">${n.idea}</p>${n.f ? n.f.split(/\s{3,}/).map(f => `<span class="formula">${f}</span>`).join(' ') : ''}
+    <div class="postit"><span class="etq">Ejemplo</span>${n.ej}</div>${n.ojo ? `<div class="postit rosa"><span class="etq">¡Ojo!</span>${n.ojo}</div>` : ''}
+    <div class="lab" id="lab"></div>
+    ${n.q.map((p, k) => `<div class="pregunta" data-k="${k}"><div class="q">Pregunta ${k + 1}: ${p[0]}</div><div class="opciones">${mezclar(p[1].map((o, i) => [o, i])).map(([o, i]) => `<button type="button" data-o="${i}">${o}</button>`).join('')}</div><div class="r"></div></div>`).join('')}
+    <div id="fin-nivel"></div>`;
+  $('sel-nivel').onchange = e => irANivel(+e.target.value);
+  LABS[n.lab]($('lab'));
+  $('nivel').querySelectorAll('.pregunta').forEach(el => el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
+    const k = +el.dataset.k, ok = b.dataset.o === '0';
+    el.querySelectorAll('[data-o]').forEach(x => x.classList.remove('ok', 'no'));
+    b.classList.add(ok ? 'ok' : 'no');
+    el.querySelector('.r').innerHTML = `<div class="nota-retro ${ok ? 'si' : 'no'}">${ok ? '<b>¡Correcto!</b> ' + n.q[k][2] : '<b>Todavía no.</b> Vuelve a leer la idea y prueba el experimento. Intenta otra vez.'}</div>`;
+    resp[k] = ok;
+    if (resp.every(Boolean)) {
+      pasados[nivelActual] = true; S.set('pasados', pasados); pintarNiveles(); progreso();
+      $('fin-nivel').innerHTML = `<div class="superado"><span class="mano">¡Nivel ${nivelActual + 1} superado!</span>${nivelActual + 1 < NIVELES.length ? `<div class="botones"><button class="primario" id="siguiente">Ir al nivel ${nivelActual + 2}</button></div>` : 'Terminaste los 20 niveles. Sigue con «Preguntas de Natalia», la práctica y el examen final.'}</div>`;
+      const s = $('siguiente'); if (s) s.onclick = () => irANivel(nivelActual + 1);
+    }
+  }));
+}
+nivelActual = Math.min(NIVELES.length - 1, Object.keys(pasados).length);
+pintarNiveles(); pintarNivel();
+
+/* ================= 4. preguntas de Natalia ================= */
+const NATALIA = [
+  ['¿Qué es un diagrama de cuerpo libre y cuáles fuerzas tiene en el carril?', ['Es el dibujo del carro con todas sus fuerzas: el empujón hacia adelante, el roce hacia atrás, el peso hacia abajo y la normal hacia arriba.', 'Es la gráfica de posición contra tiempo.', 'Es el dibujo del carro con el empujón y el roce; el peso no se dibuja porque no influye.'], 'El peso y la normal también se dibujan, aunque se anulen.'],
+  ['¿Cuáles son los supuestos del modelo?', ['Fuerzas horizontales constantes, masa constante y movimiento en línea recta.', 'Que no hay ninguna fuerza.', 'Que el carro siempre acelera.'], 'Son las condiciones que hacen válidas las fórmulas del MUA.'],
+  ['¿Por qué no se puede poner masa cero?', ['Porque la aceleración es fuerza entre masa, y no se puede dividir entre cero: no tiene sentido físico.', 'Porque es un error de programación.', 'Porque con masa cero el carro iría muy rápido.'], 'Es una condición física, no un detalle del programa.'],
+  ['Si pongo la resistencia negativa, ¿qué pasa?', ['Se bloquea: la resistencia es una magnitud. Un roce negativo empujaría, y el roce solo frena.', 'El carro acelera más.', 'Se acepta y el carro va hacia atrás.'], 'El sentido del roce lo fija el modelo: siempre contra el movimiento.'],
+  ['¿Por qué el carro no se devuelve después de frenar?', ['Porque el roce solo se opone al deslizamiento. Cuando la velocidad llega a cero, deja de deslizar y se queda quieto.', 'Porque el simulador tiene un límite de tiempo.', 'Sí se devuelve, pero no se ve.'], 'Seguir usando la fórmula daría velocidad negativa, y eso es falso.'],
+  ['Si el carro está quieto y lo empujo con una fuerza igual a la resistencia, ¿arranca?', ['No. Para arrancar debe superar la fricción estática máxima, que es al menos igual a la resistencia. La estática equilibra el empuje.', 'Sí, porque las fuerzas son iguales.', 'Sí, pero muy despacio.'], 'Con fuerza neta cero, un cuerpo quieto sigue quieto.'],
+  ['Si la fuerza neta es cero, ¿el carro está quieto?', ['No necesariamente: mantiene la velocidad que traía. Es la primera ley de Newton.', 'Sí, siempre.', 'No, acelera poco a poco.'], 'Fuerza neta cero = velocidad constante.'],
+  ['¿Por qué el trabajo de la resistencia es negativo?', ['Porque va en contra del desplazamiento: le quita energía de movimiento al carro y la convierte en calor.', 'Porque la resistencia es pequeña.', 'Porque así está en la fórmula, sin otra razón.'], 'Signo − significa «saca energía».'],
+  ['¿Cuánto trabajo hacen el peso y la normal?', ['Cero, porque son perpendiculares al movimiento.', 'Se anulan, así que el trabajo total es el peso por la distancia.', 'Negativo, porque el peso jala hacia abajo.'], 'Una fuerza perpendicular al desplazamiento no hace trabajo.'],
+  ['Si duplico la masa, ¿qué pasa con la aceleración?', ['Se reduce a la mitad, porque a = Fneta / m.', 'Se duplica.', 'No cambia, porque la fuerza es la misma.'], 'Dividir entre el doble da la mitad.'],
+  ['Si duplico la velocidad inicial, ¿qué pasa con la distancia de frenado?', ['Se multiplica por 4, porque la distancia es v₀² / (2·|a|).', 'Se duplica.', 'Queda igual.'], 'La velocidad está al cuadrado.'],
+  ['¿Cuál es la diferencia entre velocidad y aceleración?', ['La velocidad es qué tan rápido va; la aceleración es cuánto cambia esa velocidad cada segundo.', 'Son lo mismo con otra unidad.', 'La aceleración es la velocidad máxima.'], 'Por eso a = 0 no significa quieto.'],
+  ['¿Por qué se bloquea si el carro pasaría de 20 m/s?', ['Porque a esa rapidez el aire frena con una fuerza que crece con la velocidad; el modelo supone fuerzas constantes y deja de valer.', 'Porque el computador no alcanza a calcularlo.', 'Porque los carros nunca pasan de 20 m/s.'], 'Es una condición de validez del modelo.'],
+  ['El simulador dice que Wneto es igual a ΔK. ¿Con eso se valida el programa?', ['No. Los dos salen de las mismas ecuaciones y siempre coinciden. Se valida comparando con los casos A, B y C resueltos a mano.', 'Sí, si coinciden el programa está bien.', 'Sí, porque es el teorema trabajo-energía.'], 'Es una comprobación de consistencia, no una validación independiente.'],
+  ['¿Por qué aparece un aviso de «supuesto» en el caso A?', ['Porque el carro parte quieto y para saber si arranca se necesita la fricción estática máxima, que no se conoce. Se supone que el empuje la supera y se avisa.', 'Porque el caso A tiene un error.', 'Porque la masa es muy pequeña.'], 'No se debe usar la resistencia cinética como umbral de arranque sin justificarlo.'],
+  ['¿Qué significa Δ en Δx?', ['«Cambio de»: Δx es la posición final menos la inicial, o sea, cuánto avanzó.', 'Es un triángulo que indica aceleración.', 'Significa «distancia total del carril».'], 'Δ siempre es final menos inicial.']
+];
+let ni = 0, nBien = 0, nPrimera = true;
+function pintarNatalia() {
+  const caja = $('natalia-caja');
+  if (ni >= NATALIA.length) { caja.innerHTML = `<div class="centro"><p class="grande" style="font-size:56px">${nBien} de ${NATALIA.length}</p><p>al primer intento.</p><div class="botones"><button class="primario" id="n-otra">Repetir</button></div></div>`; $('n-otra').onclick = () => { ni = 0; nBien = 0; pintarNatalia(); }; return; }
+  const p = NATALIA[ni]; nPrimera = true;
+  caja.innerHTML = `<div class="marcador"><span>Pregunta ${ni + 1} de ${NATALIA.length}</span><span>Al primer intento: ${nBien}</span></div><div class="regla"><div style="width:${ni / NATALIA.length * 100}%"></div></div>
+    <p class="titulo-q"><span class="mano" style="font-size:28px;color:var(--tinta)">Natalia pregunta:</span><br>«${p[0]}»</p><div class="opciones" style="grid-template-columns:1fr">${mezclar(p[1].map((o, i) => [o, i])).map(([o, i]) => `<button type="button" data-o="${i}">${o}</button>`).join('')}</div><div id="n-retro"></div>`;
+  caja.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
+    const ok = b.dataset.o === '0'; b.classList.add(ok ? 'ok' : 'no');
+    if (ok) { if (nPrimera) nBien++; $('n-retro').innerHTML = `<div class="nota-retro si"><b>¡Esa es!</b> ${p[2]} Ahora dila en voz alta con tus palabras.</div><div class="botones"><button class="primario" id="n-sig">Siguiente</button></div>`; $('n-sig').onclick = () => { ni++; pintarNatalia(); }; }
+    else { nPrimera = false; $('n-retro').innerHTML = `<div class="nota-retro no"><b>Esa respuesta tiene un error.</b> ${p[2]} Intenta otra.</div>`; }
+  });
+}
+pintarNatalia();
+
+/* ================= 5. práctica con números nuevos ================= */
+const elegir = l => l[Math.floor(Math.random() * l.length)];
+const GENERA = {
+  arranque() { const m = elegir([0.5, 1, 2]), Fr = elegir([0.2, 0.4, 0.5, 1]), a = elegir([0.5, 1, 2]), t = elegir([1, 2, 3, 4]), Fa = +(Fr + m * a).toFixed(2), v = a * t, dx = 0.5 * a * t * t;
+    return { titulo: 'Arranque desde el reposo', texto: `Un carro de ${fmt(m)} kg está quieto. Lo empujan con ${fmt(Fa)} N y la resistencia es ${fmt(Fr)} N. Suponga que el empuje supera la fricción estática máxima. Analice ${fmt(t, 0)} s.`,
+      q: [['Aceleración', 'm/s²', a], [`Velocidad a los ${fmt(t, 0)} s`, 'm/s', v], ['Distancia recorrida', 'm', dx], ['Trabajo de la resistencia', 'J', -Fr * dx]],
+      pasos: [`Fneta = ${fmt(Fa)} − ${fmt(Fr)} = ${fmt(Fa - Fr)} N`, `a = ${fmt(Fa - Fr)} / ${fmt(m)} = ${fmt(a)} m/s²`, `v = 0 + ${fmt(a)} × ${fmt(t, 0)} = ${fmt(v)} m/s`, `Δx = ½ × ${fmt(a)} × ${fmt(t, 0)}² = ${fmt(dx)} m`, `Wᵣ = −${fmt(Fr)} × ${fmt(dx)} = ${fmt(-Fr * dx)} J`] }; },
+  frenado() { const m = elegir([0.5, 1, 2]), am = elegir([0.5, 1, 2]), Fa = elegir([0, 0, 0.2, 0.5]), v0 = elegir([2, 3, 4, 6]), Fr = +(Fa + m * am).toFixed(2), tp = v0 / am, dx = v0 * v0 / (2 * am), dK = -0.5 * m * v0 * v0;
+    return { titulo: 'Frenado hasta detenerse', texto: `Un carro de ${fmt(m)} kg va a ${fmt(v0, 0)} m/s. ${Fa > 0 ? `Lo siguen empujando con ${fmt(Fa)} N, pero la resistencia es ${fmt(Fr)} N.` : `Nadie lo empuja y la resistencia es ${fmt(Fr)} N.`}`,
+      q: [['Aceleración mientras desliza', 'm/s²', -am], ['Tiempo hasta detenerse', 's', tp], ['Distancia de frenado', 'm', dx], ['Cambio de energía cinética', 'J', dK]],
+      pasos: [`Fneta = ${fmt(Fa)} − ${fmt(Fr)} = ${fmt(Fa - Fr)} N`, `a = ${fmt(Fa - Fr)} / ${fmt(m)} = ${fmt(-am)} m/s²`, `tₚ = ${fmt(v0, 0)} / ${fmt(am)} = ${fmt(tp)} s`, `Δx = ${fmt(v0, 0)}² / (2 × ${fmt(am)}) = ${fmt(dx)} m`, `ΔK = 0 − ½ × ${fmt(m)} × ${fmt(v0, 0)}² = ${fmt(dK)} J`] }; },
+  equilibrio() { const F = elegir([0.3, 0.5, 1.2]), m = elegir([0.5, 1, 2]), v0 = elegir([1, 1.5, 2, 3]), t = elegir([2, 4, 5]), dx = v0 * t;
+    return { titulo: 'Fuerzas equilibradas', texto: `Un carro de ${fmt(m)} kg va a ${fmt(v0, 1)} m/s. Lo empujan con ${fmt(F)} N y la resistencia también es ${fmt(F)} N. Analice ${fmt(t, 0)} s.`,
+      q: [['Aceleración', 'm/s²', 0], ['Distancia recorrida', 'm', dx], ['Trabajo del empuje', 'J', F * dx], ['Trabajo neto', 'J', 0]],
+      pasos: [`Fneta = ${fmt(F)} − ${fmt(F)} = 0 → a = 0 (primera ley)`, `Δx = ${fmt(v0, 1)} × ${fmt(t, 0)} = ${fmt(dx)} m`, `Wₐ = ${fmt(F)} × ${fmt(dx)} = ${fmt(F * dx)} J`, `Wᵣ = −${fmt(F * dx)} J → Wneto = 0 = ΔK`] }; }
+};
+let tipoP = 'cualquiera', ejer = null, cuentaP = S.get('cuentaP', { bien: 0, total: 0 });
+function nuevoEjercicio() { ejer = GENERA[tipoP === 'cualquiera' ? elegir(Object.keys(GENERA)) : tipoP](); pintarPractica(); }
+function pintarPractica() {
+  const caja = $('practica-caja');
+  caja.innerHTML = `<div class="botones" style="margin-top:0">${[['cualquiera', 'Cualquiera'], ['arranque', 'Arranque'], ['frenado', 'Frenado'], ['equilibrio', 'Equilibrio']].map(([k, n]) => `<button data-tp="${k}" class="${k === tipoP ? 'primario' : ''}">${n}</button>`).join('')}</div>
+    <p class="marcador" style="margin-top:10px">Correctas en total: ${cuentaP.bien} de ${cuentaP.total}</p>
+    <h3>${ejer.titulo}</h3><div class="postit azul"><span class="etq">Enunciado</span>${ejer.texto}</div>
+    ${ejer.q.map((q, i) => `<div class="paso"><span><b>${q[0]}</b></span><span class="campo"><input data-q="${i}" inputmode="decimal" aria-label="${q[0]}"><span>${q[1]}</span></span><span class="marca" id="pm${i}"></span></div>`).join('')}
+    <div class="botones"><button class="primario" id="p-comp">Comprobar</button><button id="p-sol">Ver solución</button><button id="p-otro">Otro ejercicio</button></div><div id="p-pasos"></div>`;
+  caja.querySelectorAll('[data-tp]').forEach(b => b.onclick = () => { tipoP = b.dataset.tp; nuevoEjercicio(); });
+  $('p-comp').onclick = () => { ejer.q.forEach((q, i) => { const r = leer(caja.querySelector(`[data-q="${i}"]`).value), m = $('pm' + i);
+    if (!Number.isFinite(r)) { m.innerHTML = '<span class="mal">falta</span>'; return; }
+    cuentaP.total++; if (cerca(r, q[2])) { cuentaP.bien++; m.innerHTML = '<span class="bien">✓</span>'; } else m.innerHTML = '<span class="mal">✗ revisa</span>'; });
+    S.set('cuentaP', cuentaP); caja.querySelector('.marcador').textContent = `Correctas en total: ${cuentaP.bien} de ${cuentaP.total}`; };
+  $('p-sol').onclick = () => { $('p-pasos').innerHTML = `<div class="postit"><span class="etq">Solución</span><ol>${ejer.pasos.map(p => `<li>${p}</li>`).join('')}</ol></div>`; };
+  $('p-otro').onclick = nuevoEjercicio;
+}
+nuevoEjercicio();
+
+/* ================= 6. examen ================= */
+let ex = null;
+function nuevoExamen() { const todas = NIVELES.flatMap((n, i) => n.q.map(q => ({ q, nivel: i }))); ex = { preguntas: mezclar(todas).slice(0, 12), i: 0, bien: 0, fallos: new Set(), hecho: false }; pintarExamen(); }
+function pintarExamen() {
+  const caja = $('examen-caja');
+  if (!ex) { caja.innerHTML = `<div class="centro"><p class="titulo-q">12 preguntas, sin pistas. Mejor puntaje: <span class="resalta">${S.get('mejorExamen', 0)} de 12</span></p><div class="botones"><button class="primario" id="ex-ir">Empezar examen</button></div></div>`; $('ex-ir').onclick = nuevoExamen; return; }
+  if (ex.i >= 12) {
+    if (ex.bien > S.get('mejorExamen', 0)) S.set('mejorExamen', ex.bien);
+    const repasar = [...ex.fallos].sort((a, b) => a - b).map(i => `<li>Nivel ${i + 1}: ${NIVELES[i].t}</li>`).join('');
+    caja.innerHTML = `<div class="centro"><p class="grande" style="font-size:60px">${ex.bien} de 12</p><p>${ex.bien >= 10 ? '<span class="resalta">¡Aprobado!</span>' : 'Todavía no: la meta es 10.'}</p></div>${repasar ? `<p><b>Repasa:</b></p><ul>${repasar}</ul>` : ''}<div class="centro"><div class="botones"><button class="primario" id="ex-ir">Otro examen</button></div></div>`;
+    $('ex-ir').onclick = nuevoExamen; progreso(); return;
+  }
+  const { q, nivel } = ex.preguntas[ex.i]; ex.hecho = false;
+  caja.innerHTML = `<div class="marcador"><span>Pregunta ${ex.i + 1} de 12</span><span>Correctas: ${ex.bien}</span></div><div class="regla"><div style="width:${ex.i / 12 * 100}%"></div></div>
+    <p class="titulo-q">${q[0]}</p><div class="opciones">${mezclar(q[1].map((o, i) => [o, i])).map(([o, i]) => `<button type="button" data-o="${i}">${o}</button>`).join('')}</div><div id="ex-retro"></div>`;
+  caja.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
+    if (ex.hecho) return; ex.hecho = true;
+    const ok = b.dataset.o === '0';
+    if (ok) ex.bien++; else { ex.fallos.add(nivel); caja.querySelector('[data-o="0"]').classList.add('ok'); }
+    b.classList.add(ok ? 'ok' : 'no');
+    $('ex-retro').innerHTML = `<div class="nota-retro ${ok ? 'si' : 'no'}">${ok ? '<b>¡Bien!</b>' : '<b>No.</b>'} ${q[2]}</div><div class="botones"><button class="primario" id="ex-sig">Siguiente</button></div>`;
+    $('ex-sig').onclick = () => { ex.i++; pintarExamen(); };
+  });
+}
+pintarExamen();
+
+/* ================= progreso y pestañas ================= */
+function progreso() {
+  const sab = Object.values(sabidos).filter(Boolean).length, niv = Object.keys(pasados).length;
+  $('progreso').innerHTML = `<span>Glosario <b>${sab}/${GLOSARIO.length}</b></span><span>Juego <b>${S.get('mejorJuego', 0)}/12</b></span><span>Niveles <b>${niv}/${NIVELES.length}</b></span><span>Examen <b>${S.get('mejorExamen', 0)}/12</b></span>`;
+}
+const TABS = [['glosario', 'Glosario'], ['juego', 'Juego de símbolos'], ['niveles', 'Los 20 niveles'], ['natalia', 'Preguntas de Natalia'], ['practica', 'Práctica'], ['examen', 'Examen final']];
+function ruta() {
+  const id = (location.hash || '#glosario').slice(1), ok = TABS.some(t => t[0] === id) ? id : 'glosario';
+  document.querySelectorAll('main > section').forEach(s => s.classList.toggle('on', s.id === ok));
+  $('tabs').innerHTML = TABS.map(([i, n]) => `<a href="#${i}" class="${i === ok ? 'on' : ''}">${n}</a>`).join('');
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', ruta); ruta(); progreso();
+</script>
+</body>
+</html>

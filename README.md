@@ -1,4 +1,4 @@
-# Carril: laboratorio de fuerzas, movimiento y energía
+# Carrilab: laboratorio de fuerzas, movimiento y energía
 
 Simulador interactivo para Física Mecánica (Universidad Cooperativa de Colombia, 2026-2). Un carro de masa *m* se mueve sobre un carril horizontal, con una fuerza aplicada y una fuerza resistiva. El estudiante cambia las fuerzas, ve el movimiento en vivo y lo relaciona con las gráficas, el trabajo y la energía.
 
@@ -14,6 +14,8 @@ Simulador interactivo para Física Mecánica (Universidad Cooperativa de Colombi
 - **Practicar.** Ejercicios con números distintos cada vez, corrección automática, solución paso a paso y botón para ver el ejercicio en el carril.
 - **Ficha de clase** (`ficha.html`): actividad «Prediga, compruebe y explique», imprimible, con versión docente.
 - **Fundamentación** (`fundamentacion.html`): modelo, supuestos, ecuaciones, decisiones y unidades.
+
+- **Guía de estudio** (`guia.html`) y **Formulario** (`formulario.html`): materiales para estudiar antes de usar el simulador.
 
 Enlaces directos: `#explorar`, `#retos`, `#predecir`, `#practicar`, `#A`, `#B`, `#C`, `#ficha`, `#ficha-masa`, `#ficha-fa`.
 
@@ -50,6 +52,7 @@ src/
 │   ├── casos-prueba.js   casos A, B, C y casos borde, con valores calculados a mano
 │   └── practica.js       generador de ejercicios (usa fisica.js)
 ├── componentes/
+│   ├── Logo.jsx          logo de Carrilab (encabezado)
 │   ├── Escenario.jsx     carril, carro, flechas arrastrables, estroboscopio
 │   ├── Grafica.jsx       gráficas x(t), v(t), a(t) en vivo
 │   ├── Paneles.jsx       Movimiento, Energía, Fuerzas y Cuentas
@@ -59,7 +62,7 @@ src/
 ├── formato.js            números con coma decimal
 ├── App.jsx               estado, reproducción y modos
 └── estilos.css
-public/                   ficha.html y fundamentacion.html
+public/                   ficha, fundamentacion, guia, formulario y favicon.svg
 pruebas/pruebas.mjs       pruebas en Node
 docs/                     validación, hitos y declaración de uso de IA
 ```
@@ -101,3 +104,37 @@ Ver `docs/declaracion-ia.md`. La entrega no implica cesión de derechos de autor
 ## Librerías
 
 React 18 y Vite 5 (licencia MIT). Tipografía Archivo (Google Fonts, licencia OFL).
+
+## Requisitos de la guía y dónde se cumplen
+
+| Requisito | Dónde está |
+| --- | --- |
+| Entradas m, F, μ (cinética y estática), v₀, x₀ y tiempo, con unidades SI | Panel de datos del modo Explorar (`src/componentes/Controles.jsx`): m (kg), Fₐ y Fᵣ (N), v₀ (m/s), tiempo (s) o distancia (m); x₀ (m) y la fricción estática máxima Fₛ,máx = μₛ·N (N, opcional). La app recibe la fricción cinética como fuerza Fᵣ = μ·N en newtons, no como coeficiente μ |
+| Fuerza neta y aceleración (2.ª ley) | `calcularAceleracion` en `src/fisica/fisica.js`; se muestra en Fuerzas y Cuentas |
+| Diagrama de cuerpo libre con F, fricción, P y N | Escenario del carril y pestaña **Fuerzas**. Peso y normal vienen activados al entrar (casilla «Peso y normal») |
+| Posición y velocidad en el tiempo, con gráficas | Pestaña **Movimiento**: x(t), v(t) y a(t) en vivo (`Grafica.jsx`, `posicionEn`, `velocidadEn`) |
+| Energía: trabajo, energía cinética y teorema trabajo–energía | Pestaña **Energía** (`calcularEnergia`): K₀ + Wₐ + Wᵣ = K |
+| Casos A, B y C | Botones de caso y enlaces `#A`, `#B`, `#C`; valores en `src/fisica/casos-prueba.js` |
+| Validación de datos imposibles | `src/fisica/validacion.js` (límites en `LIMITES`); los datos inválidos se marcan en rojo y bloquean los resultados |
+| Pruebas automáticas | `npm test`: 10 casos físicos y 13 reglas de validación (`pruebas/pruebas.mjs`) |
+| Fundamentación física | `public/fundamentacion.html` |
+| Ficha de clase | `public/ficha.html` y enlace `#ficha` |
+| Hitos | `docs/hitos.md` |
+| Declaración de IA | `docs/declaracion-ia.md` |
+| Validación manual vs. programa | `docs/validacion.md` (la columna «Manual» la llena el autor) |
+| Despliegue público | https://simuladorfisica.andresjaraafl.workers.dev (Cloudflare Workers, `wrangler.jsonc`) |
+| Valor agregado: guía de estudio y formulario | `public/guia.html` y `public/formulario.html` |
+
+## Recursos para estudiantes
+
+- [Guía de estudio](public/guia.html) · [en línea](https://simuladorfisica.andresjaraafl.workers.dev/guia.html): guía interactiva de la materia, con experimentos y preguntas.
+- [Formulario](public/formulario.html) · [en línea](https://simuladorfisica.andresjaraafl.workers.dev/formulario.html): todas las fórmulas separadas por caso (arranque, frenado y equilibrio) y una calculadora que revisa lo hecho a mano.
+- [Ficha de clase](public/ficha.html) · [en línea](https://simuladorfisica.andresjaraafl.workers.dev/ficha.html): actividad «Prediga, compruebe y explique», imprimible y con versión docente.
+- [Modelo físico](public/fundamentacion.html) · [en línea](https://simuladorfisica.andresjaraafl.workers.dev/fundamentacion.html): supuestos, ecuaciones y decisiones de modelación.
+
+## Créditos
+
+- **Autor:** Andres Jaramillo.
+- **Docente:** Natalia Buitrago Henao. Física Mecánica, Universidad Cooperativa de Colombia, 2026-2.
+- El simulador se desarrolló con apoyo de Claude Code y las guías de estudio con apoyo de Claude AI (ambos de Anthropic).
+- Todos los cálculos se validaron con las pruebas automáticas y con la resolución manual de los casos A, B y C.

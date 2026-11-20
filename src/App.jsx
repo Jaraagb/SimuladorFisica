@@ -5,6 +5,7 @@ import { generarEjercicio } from './fisica/practica.js';
 import { RETOS, estrellas } from './retos.js';
 import { fmt, aTexto } from './formato.js';
 import Escenario from './componentes/Escenario.jsx';
+import Logo from './componentes/Logo.jsx';
 import { Controles } from './componentes/Controles.jsx';
 import { PanelMovimiento, PanelEnergia, PanelFuerzas, PanelCuentas } from './componentes/Paneles.jsx';
 import { PanelRetos, TarjetaPrediccion, PanelPractica, datosATexto } from './componentes/Modos.jsx';
@@ -20,6 +21,7 @@ const CASOS = {
 };
 const MODOS = [['explorar', 'Explorar'], ['retos', 'Retos'], ['predecir', 'Predecir'], ['practicar', 'Practicar']];
 const PESTANAS = [['movimiento', 'Movimiento', 'Módulo I'], ['energia', 'Energía', 'Módulo II'], ['fuerzas', 'Fuerzas', 'Diagrama'], ['cuentas', 'Cuentas', 'Paso a paso']];
+const RECURSOS = [['guia.html', 'Guía de estudio'], ['formulario.html', 'Formulario'], ['ficha.html', 'Ficha de clase'], ['fundamentacion.html', 'Modelo físico']];
 const VELOCIDADES = [0.25, 0.5, 1, 2, 4];
 
 function simular(entrada) {
@@ -54,7 +56,7 @@ export default function App() {
   const [entrada, setEntrada] = useState(CASOS[inicio.caso]);
   const [casoActivo, setCasoActivo] = useState(inicio.caso);
   const [pestana, setPestana] = useState('movimiento');
-  const [capas, setCapas] = useState({ valores: true, velocidad: true, estrobo: true, todasFuerzas: false, anterior: true });
+  const [capas, setCapas] = useState({ valores: true, velocidad: true, estrobo: true, todasFuerzas: true, anterior: true });
   const [anterior, setAnterior] = useState(null);
 
   const [t, setT] = useState(0);
@@ -191,20 +193,23 @@ export default function App() {
   return (
     <div className="app">
       <header className="barra-superior">
-        <a className="marca" href="#explorar" onClick={() => cambiarModo('explorar')}>
-          <svg viewBox="0 0 40 28" aria-hidden="true"><rect x="2" y="3" width="36" height="15" rx="4" fill="var(--carro)" stroke="var(--tinta)" strokeWidth="2.5" /><circle cx="11" cy="22" r="4.5" fill="var(--tinta)" /><circle cx="29" cy="22" r="4.5" fill="var(--tinta)" /></svg>
-          <span>Carril</span>
-        </a>
+        <Logo onClick={() => cambiarModo('explorar')} />
         <p className="lema">Fuerzas, movimiento y energía en un carril horizontal</p>
         <nav className="modos" aria-label="Modo">
           {MODOS.map(([id, nombre]) => (
             <button key={id} type="button" className={modo === id ? 'activo' : ''} aria-current={modo === id ? 'page' : undefined} onClick={() => cambiarModo(id)}>{nombre}</button>
           ))}
         </nav>
-        <nav className="enlaces" aria-label="Recursos">
-          <a href="ficha.html">Ficha de clase</a>
-          <a href="fundamentacion.html">Modelo físico</a>
+        <nav className="enlaces enlaces-ancho" aria-label="Recursos">
+          <span className="enlaces-titulo">Recursos</span>
+          {RECURSOS.map(([href, nombre]) => <a key={href} href={href}>{nombre}</a>)}
         </nav>
+        <details className="recursos">
+          <summary>Recursos</summary>
+          <nav aria-label="Recursos (menú)">
+            {RECURSOS.map(([href, nombre]) => <a key={href} href={href}>{nombre}</a>)}
+          </nav>
+        </details>
       </header>
 
       <main>
@@ -293,7 +298,8 @@ export default function App() {
       </main>
 
       <footer className="pie">
-        Proyecto de Física Mecánica, Universidad Cooperativa de Colombia, 2026-2. Docente: Natalia Buitrago Henao. Desarrollo: Andrés Felipe Jaramillo.
+        <p>Proyecto de Física Mecánica · Universidad Cooperativa de Colombia · 2026-2 · Docente: Natalia Buitrago Henao</p>
+        <p>Elaborado por Andres Jaramillo con apoyo de Claude Code</p>
       </footer>
     </div>
   );
