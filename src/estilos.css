@@ -1,5 +1,5 @@
 /* ============================================================
-   Carril: papel milimetrado, tinta azul oscuro, fuerzas a color.
+   Carrilab: papel milimetrado, tinta azul oscuro, fuerzas a color.
    El carril es el protagonista; todo lo demás es tranquilo.
    ============================================================ */
 :root {
@@ -41,8 +41,9 @@ h2, h3 { margin: 0; }
 /* ---------- barra superior ---------- */
 .barra-superior { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px 24px; padding: 18px 0 14px; }
 .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--tinta); }
-.marca svg { width: 40px; height: 28px; }
-.marca span { font-size: 30px; font-weight: 800; font-stretch: 125%; letter-spacing: -0.01em; }
+.marca svg { width: 44px; height: auto; flex: none; }
+.marca-texto { font-size: 30px; font-weight: 800; font-stretch: 125%; letter-spacing: -0.01em; line-height: 1; }
+.marca:focus-visible { border-radius: 8px; }
 .lema { margin: 0; color: var(--grafito); font-size: 15px; }
 .modos { display: flex; gap: 2px; background: var(--tinte); padding: 4px; border-radius: 999px; }
 .modos button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 15px; }
@@ -50,6 +51,16 @@ h2, h3 { margin: 0; }
 .enlaces { display: flex; gap: 16px; font-size: 15px; font-weight: 600; white-space: nowrap; }
 .enlaces a { text-decoration: none; color: var(--tinta); border-bottom: 2px solid var(--cuadricula-fuerte); }
 .enlaces a:hover { border-color: var(--tinta); }
+.enlaces-titulo { color: var(--grafito); font-weight: 700; }
+.recursos { display: none; position: relative; }
+.recursos summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 14px; border: 2px solid var(--tinta); border-radius: 999px; padding: 6px 14px; background: #fff; }
+.recursos summary::-webkit-details-marker { display: none; }
+.recursos summary::after { content: ' ▾'; }
+.recursos[open] summary::after { content: ' ▴'; }
+.recursos summary:focus-visible { outline: 3px solid var(--fa); outline-offset: 2px; }
+.recursos nav { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 190px; display: grid; background: #fff; border: 2px solid var(--tinta); border-radius: 12px; padding: 6px; box-shadow: 0 6px 18px rgba(20, 33, 61, .18); }
+.recursos nav a { padding: 9px 12px; border-radius: 8px; color: var(--tinta); font-weight: 600; text-decoration: none; }
+.recursos nav a:hover { background: var(--tinte); }
 
 /* ---------- escenario ---------- */
 .zona-escenario { border: 2.5px solid var(--tinta); border-radius: 20px; overflow: hidden; background: var(--papel); }
@@ -254,13 +265,16 @@ h2, h3 { margin: 0; }
 .fila-botones button:not(.boton-lanzar) { margin-top: 12px; border: 2px solid var(--tinta); background: #fff; border-radius: 12px; padding: 9px 14px; font-weight: 700; }
 .practica .pasos { margin-top: 14px; }
 
+.pie p { margin: 0 0 2px; }
 .pie { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--cuadricula-fuerte); color: var(--grafito); font-size: 13.5px; }
 
+@media (max-width: 1360px) { .enlaces-titulo { display: none; } }
 @media (max-width: 1100px) {
   .barra-superior { grid-template-columns: auto 1fr; }
   .lema { display: none; }
   .modos { grid-column: 1 / -1; justify-self: start; }
   .enlaces { grid-row: 1; grid-column: 2; justify-self: end; }
+  .enlaces-titulo { display: none; }
   .graficas { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 860px) {
@@ -277,10 +291,16 @@ h2, h3 { margin: 0; }
   .respuesta { grid-template-columns: 1fr auto; }
   .marca-resp { grid-column: 1 / -1; }
   .modos button { padding: 7px 12px; }
-  .marca span { font-size: 24px; }
+  .marca-texto { font-size: 24px; }
   .enlaces { gap: 10px; font-size: 13.5px; }
   .transporte { padding: 10px 12px; }
   .capas { padding: 8px 12px 10px; }
   .pestanas button { padding: 8px 10px 6px; font-size: 15px; }
+}
+@media (max-width: 640px) {
+  .enlaces-ancho { display: none; }
+  .recursos { display: block; grid-row: 1; grid-column: 2; justify-self: end; }
+  .marca svg { width: 38px; }
+  .marca-texto { font-size: 22px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

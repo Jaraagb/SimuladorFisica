@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Formulario · Fuerzas, movimiento y energía en el carril</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --hoja: #fdfefe; --cuadro: #e2ecf6; --margen: #f2a3a3;
+    --tinta: #1f3a93; --lapiz: #2a2c33; --grafito: #6a6f7a; --rojo: #d23a2f; --verde: #2e7d32;
+    --resaltador: #fff27a; --res-verde: #c8f5d0;
+    --postit: #fff59d; --postit-rosa: #ffd6e7; --postit-azul: #d9ecff; --postit-verde: #d7f7dc; --postit-naranja: #ffe4c7;
+    --borde: 255px 14px 225px 14px / 14px 225px 14px 255px;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--hoja); }
+  body {
+    margin: 0; color: var(--lapiz); font-family: "Andika", "Segoe UI", system-ui, sans-serif; font-size: 17px; line-height: 1.55;
+    background-color: var(--hoja);
+    background-image: linear-gradient(90deg, transparent 54px, var(--margen) 54px, var(--margen) 56px, transparent 56px), linear-gradient(var(--cuadro) 1px, transparent 1px), linear-gradient(90deg, var(--cuadro) 1px, transparent 1px);
+    background-size: 100% 100%, 26px 26px, 26px 26px;
+  }
+  button, input { font: inherit; color: var(--lapiz); -webkit-text-fill-color: currentColor; }
+  button { cursor: pointer; background: #fff; border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 7px 15px; font-weight: 700; }
+  button:hover { background: var(--resaltador); }
+  button.on { background: var(--resaltador); }
+  :focus-visible { outline: 3px dashed var(--tinta); outline-offset: 3px; }
+  a { color: var(--tinta); }
+  .resalta { background: linear-gradient(100deg, transparent 1%, var(--resaltador) 3%, var(--resaltador) 96%, transparent 99%); padding: 0 .12em; }
+  .mano { font-family: "Caveat", cursive; }
+
+  header, main, footer { max-width: 1080px; margin: 0 auto; padding-left: 76px; padding-right: 20px; }
+  header { padding-top: 22px; }
+  h1 { font-family: "Caveat", cursive; font-weight: 700; font-size: 58px; line-height: .95; margin: 0; color: var(--tinta); transform: rotate(-1deg); transform-origin: left; }
+  .sub { margin: 8px 0 0; max-width: 66ch; }
+  .barra { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 6px; }
+  .barra a { text-decoration: none; color: var(--lapiz); font-weight: 700; border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 7px 15px; background: #fff; }
+  .barra a:hover { background: var(--resaltador); }
+  h2 { font-family: "Caveat", cursive; font-weight: 700; font-size: 42px; line-height: 1; color: var(--tinta); margin: 34px 0 10px; }
+  h3 { font-family: "Caveat", cursive; font-weight: 700; font-size: 30px; line-height: 1; margin: 0 0 4px; color: var(--tinta); }
+  h4 { font-size: 15px; margin: 14px 0 4px; text-transform: none; color: var(--grafito); border-bottom: 2px dashed #c9d3df; padding-bottom: 2px; }
+
+  .hoja { background: #fff; border: 2px solid var(--lapiz); border-radius: var(--borde); padding: 18px 20px; box-shadow: 3px 4px 0 rgba(42, 44, 51, .12); }
+  .postit { padding: 16px 18px 14px; position: relative; box-shadow: 2px 4px 0 rgba(0, 0, 0, .07); }
+  .postit::before { content: ""; position: absolute; top: -11px; left: calc(50% - 40px); width: 80px; height: 22px; background: rgba(255, 255, 255, .65); border: 1px solid rgba(0, 0, 0, .06); transform: rotate(-3deg); }
+  .amarillo { background: var(--postit); } .rosa { background: var(--postit-rosa); } .azul { background: var(--postit-azul); } .verde { background: var(--postit-verde); } .naranja { background: var(--postit-naranja); }
+  .gira-1 { transform: rotate(-.7deg); } .gira-2 { transform: rotate(.6deg); } .gira-3 { transform: rotate(-.3deg); }
+
+  .fx { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center; padding: 5px 0; }
+  .formula { display: inline-block; font-weight: 700; font-size: 18.5px; color: var(--tinta); border: 2px solid var(--tinta); border-radius: var(--borde); padding: 3px 12px; background: #fff; white-space: nowrap; }
+  .para { font-size: 15.5px; color: var(--lapiz); }
+  .para b { color: var(--rojo); font-weight: 700; }
+  .ojo { margin-top: 10px; font-size: 15.5px; border-left: 4px solid var(--rojo); padding: 4px 10px; background: rgba(255, 255, 255, .7); }
+  .condicion { font-family: "Caveat", cursive; font-size: 24px; color: var(--rojo); line-height: 1.1; margin: 0 0 6px; }
+
+  .general { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .casos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+  .tabla { width: 100%; border-collapse: collapse; font-size: 16px; }
+  .tabla th, .tabla td { padding: 7px 8px; border-bottom: 1.5px solid #c9d3df; text-align: left; vertical-align: top; }
+  .tabla th { font-size: 14.5px; color: var(--grafito); }
+  .tabla td.caso { font-family: "Caveat", cursive; font-size: 24px; font-weight: 700; color: var(--tinta); white-space: nowrap; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  ol.receta { margin: 6px 0 0; padding-left: 22px; } ol.receta li { margin: 4px 0; }
+  ul.errores { margin: 6px 0 0; padding-left: 20px; } ul.errores li { margin: 5px 0; }
+
+  /* calculadora */
+  .calc-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 14px; }
+  .calc-datos label { font-weight: 700; font-size: 15.5px; display: block; }
+  .campo { display: flex; align-items: center; border: 2px solid var(--lapiz); border-radius: 6px 10px 5px 9px; background: #fff; margin-top: 2px; }
+  .campo input { width: 100%; min-width: 0; border: 0; padding: 7px 8px; text-align: right; font-weight: 700; outline: none; background: transparent; }
+  .campo span { padding: 0 9px 0 2px; color: var(--grafito); font-size: 15px; }
+  .campo.mal { border-color: var(--rojo); background: #fff3f2; }
+  .modo { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 0; }
+  .resultado { margin-top: 16px; }
+  .resultado .caso-detectado { font-family: "Caveat", cursive; font-size: 34px; font-weight: 700; color: var(--rojo); line-height: 1; margin: 0 0 6px; }
+  .resultado ol { padding-left: 22px; margin: 6px 0; } .resultado li { margin: 5px 0; }
+  .bloqueo { background: #fff3f2; border: 2px solid var(--rojo); border-radius: 8px; padding: 10px 14px; color: var(--rojo); font-weight: 700; }
+  .aviso { font-size: 15.5px; border-left: 4px solid #e8771c; padding: 4px 10px; background: #fff8ef; margin: 8px 0; }
+
+  footer { padding-top: 20px; padding-bottom: 40px; margin-top: 34px; border-top: 2px dashed #c9d3df; font-size: 15.5px; color: var(--grafito); }
+  footer .firma { font-family: "Caveat", cursive; font-size: 30px; color: var(--tinta); display: block; line-height: 1.1; }
+
+  @media (max-width: 960px) { .general, .casos { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) {
+    body { background-image: linear-gradient(var(--cuadro) 1px, transparent 1px), linear-gradient(90deg, var(--cuadro) 1px, transparent 1px); background-size: 26px 26px, 26px 26px; }
+    header, main, footer { padding-left: 16px; padding-right: 16px; }
+    h1 { font-size: 44px; } h2 { font-size: 36px; }
+    .general, .casos, .dos { grid-template-columns: 1fr; }
+    .formula { white-space: normal; }
+    .fx { grid-template-columns: 1fr; }
+  }
+  @media print {
+    html, body { background: #fff !important; font-size: 11px; line-height: 1.35; }
+    h1 { font-size: 34px; } .sub { margin-top: 2px; }
+    h2 { font-size: 24px; margin: 10px 0 6px; } h3 { font-size: 20px; } h4 { font-size: 10.5px; margin: 6px 0 2px; }
+    .general, .casos { grid-template-columns: repeat(3, 1fr) !important; }
+    .dos { grid-template-columns: 1fr 1fr !important; }
+    .hoja, .postit { padding: 8px 10px; }
+    .fx { grid-template-columns: 1fr; gap: 0; padding: 2px 0; }
+    .formula { font-size: 12px; padding: 1px 7px; white-space: normal; }
+    .para { font-size: 10px; } .ojo { font-size: 10px; margin-top: 6px; }
+    .condicion { font-size: 17px; margin-bottom: 2px; }
+    .tabla { font-size: 10.5px; } .tabla td, .tabla th { padding: 3px 5px; } .tabla td.caso { font-size: 16px; }
+    footer { margin-top: 10px; padding-top: 6px; } footer .firma { font-size: 20px; }
+    .barra, #calculadora, #calculadora + .hoja, .no-imprimir { display: none !important; }
+    footer { font-size: 10px; }
+    header, main, footer { padding-left: 0; padding-right: 0; max-width: none; }
+    h2 { margin-top: 18px; break-after: avoid; }
+    .postit, .hoja { box-shadow: none; transform: none !important; break-inside: avoid; }
+    .postit::before { display: none; }
+    .general, .casos { gap: 12px; }
+    @page { margin: 12mm; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Formulario del carril</h1>
+  <p class="sub">Todas las fórmulas para resolver casos de <span class="resalta">fuerzas, movimiento y energía</span> en un carril horizontal, separadas por tipo de caso. Primero mira qué caso es; después usa su hoja.</p>
+  <div class="barra">
+    <a href="#que-caso">¿Qué caso es?</a>
+    <a href="#todos">Para todos</a>
+    <a href="#arranque">Arranque</a>
+    <a href="#frenado">Frenado</a>
+    <a href="#equilibrio">Equilibrio</a>
+    <a href="#calculadora">Calculadora</a>
+    <a href="https://simuladorfisica.andresjaraafl.workers.dev/#explorar" target="_blank" rel="noopener">Simulador Carril</a>
+    <button type="button" id="imprimir">Imprimir</button>
+  </div>
+</header>
+
+<main>
+  <!-- ¿QUÉ CASO ES? -->
+  <h2 id="que-caso">¿Qué caso es?</h2>
+  <div class="hoja">
+    <p style="margin:0 0 8px">Compara el <b>empuje Fₐ</b> con la <b>resistencia Fᵣ</b> y mira si el carro <b>ya se movía</b> (v₀).</p>
+    <table class="tabla">
+      <thead><tr><th>Si…</th><th>Caso</th><th>Qué pasa</th></tr></thead>
+      <tbody>
+        <tr><td>v₀ = 0 y Fₐ &gt; Fᵣ</td><td class="caso">Arranque</td><td>Sale del reposo y acelera. <i>Supuesto:</i> el empuje supera la fricción estática máxima.</td></tr>
+        <tr><td>v₀ &gt; 0 y Fₐ &gt; Fᵣ</td><td class="caso">Arranque*</td><td>Ya se movía y sigue acelerando: mismas fórmulas, pero con v₀.</td></tr>
+        <tr><td>v₀ &gt; 0 y Fₐ &lt; Fᵣ</td><td class="caso">Frenado</td><td>Frena, se detiene y se queda quieto. No retrocede.</td></tr>
+        <tr><td>Fₐ = Fᵣ (y v₀ &gt; 0)</td><td class="caso">Equilibrio</td><td>Fuerza neta cero: sigue a la misma velocidad.</td></tr>
+        <tr><td>v₀ = 0 y Fₐ ≤ Fᵣ</td><td class="caso">Quieto</td><td>No arranca: la fricción estática iguala al empuje. a = 0, nada se mueve.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PARA TODOS -->
+  <h2 id="todos">Para todos los casos</h2>
+  <div class="general">
+    <div class="postit azul gira-1">
+      <h3>Fuerzas</h3>
+      <div class="fx"><span class="formula">P = m·g</span><span class="para">peso (g = 9,8 m/s²)</span></div>
+      <div class="fx"><span class="formula">N = P</span><span class="para">normal: se anula con el peso</span></div>
+      <div class="fx"><span class="formula">Fneta = Fₐ − Fᵣ</span><span class="para">lo que sobra</span></div>
+      <div class="fx"><span class="formula">a = Fneta / m</span><span class="para">2.ª ley de Newton</span></div>
+      <div class="fx"><span class="formula">Fₛ,máx = μₛ·N</span><span class="para">lo máximo que aguanta la fricción estática</span></div>
+      <div class="fx"><span class="formula">Fᵣ = μ·N</span><span class="para">roce si te dan el coeficiente cinético μ</span></div>
+      <p class="ojo">DCL: siempre 4 fuerzas. Fₐ →, Fᵣ ←, P ↓, N ↑.</p>
+    </div>
+    <div class="postit amarillo gira-2">
+      <h3>Movimiento (a constante)</h3>
+      <div class="fx"><span class="formula">v = v₀ + a·t</span><span class="para">velocidad en el instante t</span></div>
+      <div class="fx"><span class="formula">x = x₀ + v₀·t + ½·a·t²</span><span class="para">posición en el instante t</span></div>
+      <div class="fx"><span class="formula">Δx = x − x₀</span><span class="para">cuánto avanzó</span></div>
+      <div class="fx"><span class="formula">v² = v₀² + 2·a·Δx</span><span class="para">cuando <b>no</b> te dan el tiempo</span></div>
+      <div class="fx"><span class="formula">Δx = ½·(v₀ + v)·t</span><span class="para">cuando conoces las dos velocidades</span></div>
+    </div>
+    <div class="postit verde gira-3">
+      <h3>Energía y trabajo</h3>
+      <div class="fx"><span class="formula">K = ½·m·v²</span><span class="para">energía cinética</span></div>
+      <div class="fx"><span class="formula">ΔK = K − K₀</span><span class="para">lo que ganó o perdió</span></div>
+      <div class="fx"><span class="formula">W = F·Δx·cos θ</span><span class="para">trabajo (θ: ángulo con el movimiento)</span></div>
+      <div class="fx"><span class="formula">Wₐ = Fₐ·Δx</span><span class="para">empuje: <b>positivo</b></span></div>
+      <div class="fx"><span class="formula">Wᵣ = −Fᵣ·Δx</span><span class="para">roce: <b>negativo</b></span></div>
+      <div class="fx"><span class="formula">Wₚ = Wₙ = 0</span><span class="para">perpendiculares al movimiento</span></div>
+      <div class="fx"><span class="formula">Wneto = Wₐ + Wᵣ = ΔK</span><span class="para">teorema trabajo-energía</span></div>
+    </div>
+  </div>
+
+  <!-- CASOS -->
+  <h2>Las tres hojas de casos</h2>
+  <div class="casos">
+    <div class="hoja" id="arranque">
+      <h3>Arranque</h3>
+      <p class="condicion">v₀ = 0 y Fₐ &gt; Fᵣ</p>
+      <h4>Fuerzas</h4>
+      <div class="fx"><span class="formula">a = (Fₐ − Fᵣ) / m</span><span class="para">positiva</span></div>
+      <h4>Movimiento</h4>
+      <div class="fx"><span class="formula">v = a·t</span><span class="para">parte de v₀ = 0</span></div>
+      <div class="fx"><span class="formula">Δx = ½·a·t²</span><span class="para"></span></div>
+      <h4>Si te dan la distancia Δx</h4>
+      <div class="fx"><span class="formula">t = √(2·Δx / a)</span><span class="para">cuánto tarda</span></div>
+      <div class="fx"><span class="formula">v = √(2·a·Δx)</span><span class="para">con qué llega</span></div>
+      <h4>Energía</h4>
+      <div class="fx"><span class="formula">K₀ = 0</span><span class="para">empieza quieto</span></div>
+      <div class="fx"><span class="formula">K = ½·m·v²</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">Wₐ = Fₐ·Δx</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">Wᵣ = −Fᵣ·Δx</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">(Fₐ − Fᵣ)·Δx = K</span><span class="para">Wneto = ΔK</span></div>
+      <h4>Despejes útiles</h4>
+      <div class="fx"><span class="formula">Fₐ = Fᵣ + m·a</span><span class="para">empuje para lograr una aceleración</span></div>
+      <div class="fx"><span class="formula">a = 2·Δx / t²</span><span class="para">para recorrer Δx en un tiempo t</span></div>
+      <p class="ojo"><b>Ojo:</b> para saber si arranca hay que comparar con Fₛ,máx = μₛ·N, no con Fᵣ. Sin ese dato, se <b>supone</b> que arranca y se dice. Si ya se movía (v₀ &gt; 0), usa v = v₀ + a·t y Δx = v₀·t + ½·a·t².</p>
+    </div>
+
+    <div class="hoja" id="frenado">
+      <h3>Frenado</h3>
+      <p class="condicion">v₀ &gt; 0 y Fₐ &lt; Fᵣ</p>
+      <h4>Fuerzas</h4>
+      <div class="fx"><span class="formula">a = (Fₐ − Fᵣ) / m</span><span class="para">negativa</span></div>
+      <h4>Cuándo y dónde para</h4>
+      <div class="fx"><span class="formula">tₚ = v₀ / |a|</span><span class="para">tiempo de parada</span></div>
+      <div class="fx"><span class="formula">d = v₀² / (2·|a|)</span><span class="para">distancia de frenado</span></div>
+      <div class="fx"><span class="formula">d = v₀·tₚ / 2</span><span class="para">otra forma</span></div>
+      <div class="fx"><span class="formula">d = ½·m·v₀² / (Fᵣ − Fₐ)</span><span class="para">con energía</span></div>
+      <h4>Antes de parar (t &lt; tₚ)</h4>
+      <div class="fx"><span class="formula">v = v₀ + a·t</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">x = x₀ + v₀·t + ½·a·t²</span><span class="para"></span></div>
+      <h4>Después de parar (t ≥ tₚ)</h4>
+      <div class="fx"><span class="formula">v = 0</span><span class="para">se queda quieto: <b>no retrocede</b></span></div>
+      <div class="fx"><span class="formula">x = x₀ + d</span><span class="para">se queda donde paró</span></div>
+      <h4>Energía</h4>
+      <div class="fx"><span class="formula">ΔK = −½·m·v₀²</span><span class="para">pierde toda su energía</span></div>
+      <div class="fx"><span class="formula">Wᵣ = −Fᵣ·d</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">Wₐ = Fₐ·d</span><span class="para">cero si nadie empuja</span></div>
+      <div class="fx"><span class="formula">Wₐ + Wᵣ = ΔK</span><span class="para"></span></div>
+      <h4>Despejes útiles</h4>
+      <div class="fx"><span class="formula">Fᵣ = Fₐ + m·v₀² / (2·d)</span><span class="para">resistencia para parar en d</span></div>
+      <p class="ojo"><b>Ojo:</b> si te piden un tiempo mayor que tₚ, no uses v = v₀ + a·t: daría negativa. Si te piden recorrer Δx, solo lo logra si Δx ≤ d.</p>
+    </div>
+
+    <div class="hoja" id="equilibrio">
+      <h3>Equilibrio</h3>
+      <p class="condicion">Fₐ = Fᵣ</p>
+      <h4>Fuerzas</h4>
+      <div class="fx"><span class="formula">Fneta = 0</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">a = 0</span><span class="para"></span></div>
+      <h4>Movimiento</h4>
+      <div class="fx"><span class="formula">v = v₀</span><span class="para">constante (1.ª ley de Newton)</span></div>
+      <div class="fx"><span class="formula">Δx = v₀·t</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">t = Δx / v₀</span><span class="para">si te dan la distancia</span></div>
+      <h4>Energía</h4>
+      <div class="fx"><span class="formula">K = K₀ = ½·m·v₀²</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">ΔK = 0</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">Wₐ = Fₐ·Δx</span><span class="para"></span></div>
+      <div class="fx"><span class="formula">Wᵣ = −Fᵣ·Δx = −Wₐ</span><span class="para">el roce saca lo que mete el empuje</span></div>
+      <div class="fx"><span class="formula">Wneto = 0</span><span class="para"></span></div>
+      <p class="ojo"><b>Ojo:</b> fuerza neta cero <b>no</b> es quieto: es velocidad constante. Solo si v₀ = 0 se queda quieto (no arranca).</p>
+    </div>
+  </div>
+
+  <!-- RECETA Y ERRORES -->
+  <h2>Receta y errores frecuentes</h2>
+  <div class="dos">
+    <div class="postit naranja gira-2">
+      <h3>Receta en 7 pasos</h3>
+      <ol class="receta">
+        <li>Dibuja el DCL con las 4 fuerzas.</li>
+        <li>Fuerza neta: Fₐ − Fᵣ.</li>
+        <li>Aceleración: a = Fneta / m. Mira el signo para saber el caso.</li>
+        <li>Movimiento: t, v y x con las fórmulas de su hoja. Si frena, primero calcula tₚ.</li>
+        <li>Energía: K₀, K y ΔK.</li>
+        <li>Trabajos: Wₐ, Wᵣ y Wneto. Comprueba que Wneto = ΔK.</li>
+        <li>Conclusión en una frase, con unidades.</li>
+      </ol>
+    </div>
+    <div class="postit rosa gira-1">
+      <h3>Errores frecuentes</h3>
+      <ul class="errores">
+        <li>Olvidar el <b>½</b> en x = ½·a·t² y en K = ½·m·v².</li>
+        <li>Poner Wᵣ positivo: el roce <b>siempre</b> hace trabajo negativo.</li>
+        <li>Usar v = v₀ + a·t <b>después</b> de que el carro se detuvo.</li>
+        <li>Dejar la masa en gramos: 500 g = <b>0,5 kg</b>.</li>
+        <li>Usar Fᵣ para decidir si arranca: se necesita Fₛ,máx.</li>
+        <li>Olvidar las unidades: N = kg·m/s² y J = N·m.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CALCULADORA -->
+  <h2 id="calculadora">Resuélvelo con números</h2>
+  <div class="hoja">
+    <p style="margin:0 0 10px">Escribe los datos (con coma o punto). La calculadora te dice qué caso es y te muestra <b>cada fórmula con tus números</b>, paso a paso. Úsala para revisar lo que hiciste a mano.</p>
+    <div class="calc-datos">
+      <div><label for="c-m">Masa m</label><span class="campo"><input id="c-m" value="0,5" inputmode="decimal"><span>kg</span></span></div>
+      <div><label for="c-Fa">Empuje Fₐ</label><span class="campo"><input id="c-Fa" value="1,2" inputmode="decimal"><span>N</span></span></div>
+      <div><label for="c-Fr">Resistencia Fᵣ</label><span class="campo"><input id="c-Fr" value="0,2" inputmode="decimal"><span>N</span></span></div>
+      <div><label for="c-v0">Velocidad inicial v₀</label><span class="campo"><input id="c-v0" value="0" inputmode="decimal"><span>m/s</span></span></div>
+      <div><label for="c-val" id="c-val-et">Tiempo t</label><span class="campo"><input id="c-val" value="1" inputmode="decimal"><span id="c-val-u">s</span></span></div>
+    </div>
+    <div class="modo"><button type="button" id="m-t" class="on">Me dan el tiempo</button><button type="button" id="m-x">Me dan la distancia</button>
+      <button type="button" data-ej="A">Ejemplo: caso A</button><button type="button" data-ej="B">Caso B</button><button type="button" data-ej="C">Caso C</button></div>
+    <div class="resultado" id="resultado" aria-live="polite"></div>
+  </div>
+</main>
+
+<footer>
+  <span class="firma">Elaborado por Andres Jaramillo con apoyo de Claude AI</span>
+  Física Mecánica, Universidad Cooperativa de Colombia, 2026-2. Úsalo junto con el <a href="https://simuladorfisica.andresjaraafl.workers.dev/#explorar" target="_blank" rel="noopener">simulador Carril</a>.
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 2) => { const r = Number(n.toFixed(d)) + 0; return r.toLocaleString('es-CO', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'); };
+const leer = t => { const s = String(t ?? '').trim().replace('−', '-').replace(',', '.'); return s === '' ? NaN : Number(s); };
+let modo = 't';
+
+const EJEMPLOS = {
+  A: { m: '0,5', Fa: '1,2', Fr: '0,2', v0: '0', modo: 'x', val: '1' },
+  B: { m: '0,5', Fa: '0,3', Fr: '0,3', v0: '1', modo: 't', val: '2' },
+  C: { m: '0,5', Fa: '0', Fr: '0,5', v0: '2', modo: 't', val: '3' }
+};
+
+function ponerModo(m) {
+  modo = m; $('m-t').classList.toggle('on', m === 't'); $('m-x').classList.toggle('on', m === 'x');
+  $('c-val-et').textContent = m === 't' ? 'Tiempo t' : 'Distancia Δx'; $('c-val-u').textContent = m === 't' ? 's' : 'm';
+  calcular();
+}
+
+function calcular() {
+  const d = { m: leer($('c-m').value), Fa: leer($('c-Fa').value), Fr: leer($('c-Fr').value), v0: leer($('c-v0').value), val: leer($('c-val').value) };
+  const err = [];
+  const marca = (id, mal) => $(id).closest('.campo').classList.toggle('mal', mal);
+  ['c-m', 'c-Fa', 'c-Fr', 'c-v0', 'c-val'].forEach(id => marca(id, false));
+  const chequeo = (cond, id, msg) => { if (cond) { err.push(msg); marca(id, true); } };
+  chequeo(!Number.isFinite(d.m) || d.m <= 0, 'c-m', 'La masa debe ser un número mayor que 0 kg (no se puede dividir entre 0).');
+  chequeo(!Number.isFinite(d.Fa) || d.Fa < 0, 'c-Fa', 'El empuje es una magnitud: 0 o más.');
+  chequeo(!Number.isFinite(d.Fr) || d.Fr < 0, 'c-Fr', 'La resistencia no puede ser negativa: el roce solo frena.');
+  chequeo(!Number.isFinite(d.v0) || d.v0 < 0, 'c-v0', 'v₀ negativa está fuera del modelo (el carro iría hacia atrás).');
+  chequeo(!Number.isFinite(d.val) || d.val <= 0, 'c-val', modo === 't' ? 'El tiempo debe ser mayor que 0 s.' : 'La distancia debe ser mayor que 0 m.');
+  const out = $('resultado');
+  if (err.length) { out.innerHTML = `<div class="bloqueo">No se puede calcular:<ul>${err.map(e => `<li>${e}</li>`).join('')}</ul></div>`; return; }
+
+  const { m, Fa, Fr, v0 } = d, Fn = Fa - Fr;
+  const desliza = v0 > 0 || Fa > Fr;
+  const a = desliza ? Fn / m : 0;
+  const p = [], avisos = [];
+  let caso;
+  if (!desliza) caso = 'Quieto (no arranca)';
+  else if (Math.abs(a) < 1e-12) caso = 'Equilibrio';
+  else if (a > 0) caso = v0 === 0 ? 'Arranque' : 'Arranque* (ya se movía y acelera)';
+  else caso = 'Frenado';
+  if (v0 === 0 && Fa > Fr) avisos.push('Supuesto: el empuje supera la fricción estática máxima (no conocemos μₛ).');
+
+  p.push(`Peso y normal: P = N = m·g = ${fmt(m)} × 9,8 = ${fmt(m * 9.8)} N (se anulan).`);
+  if (!desliza) {
+    p.push(`En reposo la fricción estática iguala al empuje: fₛ = ${fmt(Fa)} N.`, 'Fneta = 0 → a = 0. El carro no se mueve: v = 0, Δx = 0, K = 0 y ningún trabajo.');
+    out.innerHTML = pintar(caso, p, avisos); return;
+  }
+  p.push(`Fneta = Fₐ − Fᵣ = ${fmt(Fa)} − ${fmt(Fr)} = ${fmt(Fn)} N`, `a = Fneta / m = ${fmt(Fn)} / ${fmt(m)} = ${fmt(a)} m/s²`);
+
+  let t, v, dx;
+  if (a < 0) {
+    const tp = v0 / -a, dP = v0 * v0 / (2 * -a);
+    p.push(`Tiempo de parada: tₚ = v₀ / |a| = ${fmt(v0)} / ${fmt(-a)} = ${fmt(tp)} s`, `Distancia de frenado: d = v₀² / (2·|a|) = ${fmt(v0)}² / (2 × ${fmt(-a)}) = ${fmt(dP)} m`);
+    if (modo === 't') {
+      t = d.val;
+      if (t >= tp) { v = 0; dx = dP; p.push(`Como t = ${fmt(t)} s ≥ tₚ, ya se detuvo: v = 0 y Δx = d = ${fmt(dP)} m. No retrocede.`); }
+      else { v = v0 + a * t; dx = v0 * t + 0.5 * a * t * t; p.push(`v = v₀ + a·t = ${fmt(v0)} + (${fmt(a)}) × ${fmt(t)} = ${fmt(v)} m/s`, `Δx = v₀·t + ½·a·t² = ${fmt(v0)} × ${fmt(t)} + ½ × (${fmt(a)}) × ${fmt(t)}² = ${fmt(dx)} m`); }
+    } else {
+      if (d.val > dP) { v = 0; dx = dP; avisos.push(`No alcanza a recorrer ${fmt(d.val)} m: se detiene a los ${fmt(dP)} m.`); p.push(`Como Δx pedido > d, se detiene antes: v = 0 y Δx = ${fmt(dP)} m.`); }
+      else { dx = d.val; v = Math.sqrt(v0 * v0 + 2 * a * dx); t = (v - v0) / a; p.push(`v² = v₀² + 2·a·Δx = ${fmt(v0)}² + 2 × (${fmt(a)}) × ${fmt(dx)} → v = ${fmt(v)} m/s`, `t = (v − v₀) / a = (${fmt(v)} − ${fmt(v0)}) / (${fmt(a)}) = ${fmt(t)} s`); }
+    }
+  } else if (a > 0) {
+    if (modo === 't') { t = d.val; v = v0 + a * t; dx = v0 * t + 0.5 * a * t * t; p.push(`v = v₀ + a·t = ${fmt(v0)} + ${fmt(a)} × ${fmt(t)} = ${fmt(v)} m/s`, `Δx = v₀·t + ½·a·t² = ${fmt(v0)} × ${fmt(t)} + ½ × ${fmt(a)} × ${fmt(t)}² = ${fmt(dx)} m`); }
+    else { dx = d.val; v = Math.sqrt(v0 * v0 + 2 * a * dx); t = (v - v0) / a; p.push(`v² = v₀² + 2·a·Δx = ${fmt(v0)}² + 2 × ${fmt(a)} × ${fmt(dx)} → v = ${fmt(v)} m/s`, v0 === 0 ? `t = √(2·Δx / a) = √(2 × ${fmt(dx)} / ${fmt(a)}) = ${fmt(t)} s` : `t = (v − v₀) / a = (${fmt(v)} − ${fmt(v0)}) / ${fmt(a)} = ${fmt(t)} s`); }
+  } else {
+    v = v0;
+    if (modo === 't') { t = d.val; dx = v0 * t; p.push(`a = 0 → v = v₀ = ${fmt(v0)} m/s (constante)`, `Δx = v₀·t = ${fmt(v0)} × ${fmt(t)} = ${fmt(dx)} m`); }
+    else { dx = d.val; t = dx / v0; p.push(`a = 0 → v = v₀ = ${fmt(v0)} m/s (constante)`, `t = Δx / v₀ = ${fmt(dx)} / ${fmt(v0)} = ${fmt(t)} s`); }
+  }
+  if (Math.max(v0, v) > 20) avisos.push('Ojo: el carro superaría 20 m/s. A esa rapidez el aire frena distinto y el modelo de fuerzas constantes deja de valer.');
+
+  const K0 = 0.5 * m * v0 * v0, K = 0.5 * m * v * v, Wa = Fa * dx, Wr = -Fr * dx;
+  p.push(`K₀ = ½·m·v₀² = ½ × ${fmt(m)} × ${fmt(v0)}² = ${fmt(K0)} J`, `K = ½·m·v² = ½ × ${fmt(m)} × ${fmt(v)}² = ${fmt(K)} J → ΔK = ${fmt(K - K0)} J`,
+    `Wₐ = Fₐ·Δx = ${fmt(Fa)} × ${fmt(dx)} = ${fmt(Wa)} J`, `Wᵣ = −Fᵣ·Δx = −${fmt(Fr)} × ${fmt(dx)} = ${fmt(Wr)} J`,
+    `Wneto = ${fmt(Wa)} + (${fmt(Wr)}) = ${fmt(Wa + Wr)} J ${Math.abs(Wa + Wr - (K - K0)) < 1e-6 ? '= ΔK ✓' : '≠ ΔK (revisa)'}`);
+  out.innerHTML = pintar(caso, p, avisos);
+}
+const pintar = (caso, pasos, avisos) => `<p class="caso-detectado">Caso: ${caso}</p>${avisos.map(a => `<p class="aviso">${a}</p>`).join('')}<ol>${pasos.map(x => `<li>${x}</li>`).join('')}</ol>`;
+
+['c-m', 'c-Fa', 'c-Fr', 'c-v0', 'c-val'].forEach(id => $(id).addEventListener('input', calcular));
+$('m-t').onclick = () => ponerModo('t'); $('m-x').onclick = () => ponerModo('x');
+document.querySelectorAll('[data-ej]').forEach(b => b.onclick = () => { const e = EJEMPLOS[b.dataset.ej]; $('c-m').value = e.m; $('c-Fa').value = e.Fa; $('c-Fr').value = e.Fr; $('c-v0').value = e.v0; $('c-val').value = e.val; ponerModo(e.modo); });
+$('imprimir').onclick = () => { try { window.print(); } catch (e) { /* algunos visores no permiten imprimir: usar Ctrl + P */ } };
+calcular();
+</script>
+</body>
+</html>

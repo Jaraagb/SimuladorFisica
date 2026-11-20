@@ -1,9 +1,10 @@
-# Registro de proceso: tres hitos
+# Registro de proceso: hitos
 
-Completa las fechas y los cambios reales a medida que ocurran.
-
-| Hito | Fecha | Qué se hizo | Cambios principales |
-| --- | --- | --- | --- |
-| 1. Modelo físico | 15–__ nov 2026 | Lectura de la guía y levantamiento de requisitos (15 nov). DCL y solución manuscrita de los casos A, B y C. Supuestos del modelo. | Decisión: fórmulas exactas por tramos en lugar de simulación numérica. Decisión: arranque desde el reposo con aviso de supuesto y campo opcional de fricción estática. |
-| 2. Primer prototipo | 17 nov 2026 | Núcleo `fisica.js` con pruebas automáticas (casos A, B, C y 6 casos borde). Primera interfaz en HTML y JavaScript con los módulos I y II, gráficas, DCL y validaciones. | Se agregó el modo «analizar hasta Δx» porque el caso A viene dado por desplazamiento. |
-| 3. Versión final | 17–__ nov 2026 | Rediseño completo como laboratorio interactivo (React + Vite) para que la clase sea más dinámica: carril animado, flechas arrastrables, estroboscopio, gráficas en vivo, energía en vivo, retos, modo de predicción y práctica. Despliegue en Cloudflare Pages. | El núcleo físico no cambió (mismas pruebas); solo se agregó calcular la energía en cualquier instante t. La primera interfaz se veía como un formulario y se reemplazó. |
+| Hito | Fecha | Qué se hizo |
+| --- | --- | --- |
+| Análisis de la guía | 15/11/2026 | Análisis de la guía y lista de requisitos. |
+| Núcleo físico y prototipo | 16–17/11/2026 | Núcleo físico por tramos, pruebas automáticas y primer prototipo. |
+| Rediseño y despliegue | 17/11/2026 | Rediseño completo en React y despliegue en Cloudflare. |
+| Validación y guía de estudio | 18/11/2026 | Bloqueo de datos físicamente imposibles (pedido por la docente) y guía de estudio. |
+| Guías, nombre y logo | 19/11/2026 | Guía de la materia, formulario, nombre Carrilab y logo. |
+| Resolución manual de casos A, B y C | por completar (Andres) | Diagrama de cuerpo libre, ecuaciones, sustituciones y conclusiones, hechos a mano. |
