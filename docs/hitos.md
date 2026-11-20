@@ -7,4 +7,4 @@
 | Rediseño y despliegue | 17/11/2026 | Rediseño completo en React y despliegue en Cloudflare. |
 | Validación y guía de estudio | 18/11/2026 | Bloqueo de datos físicamente imposibles (pedido por la docente) y guía de estudio. |
 | Guías, nombre y logo | 19/11/2026 | Guía de la materia, formulario, nombre Carrilab y logo. |
-| Resolución manual de casos A, B y C | por completar (Andres) | Diagrama de cuerpo libre, ecuaciones, sustituciones y conclusiones, hechos a mano. |
+| Resolución manual de casos A, B y C | 19/11/2026 | Diagrama de cuerpo libre, ecuaciones, sustituciones y conclusiones, hechos a mano. Transcripción en docs/solucion-manual.md y en la pestaña Cuentas. |

@@ -232,6 +232,10 @@ h2, h3 { margin: 0; }
 .lista-pruebas li { padding: 4px 0; border-bottom: 1px solid var(--cuadricula); }
 .lista-pruebas summary { cursor: pointer; font-size: 15px; }
 .lista-pruebas summary span { font-weight: 800; margin-right: 4px; }
+.solucion-manual .datos-caso { margin: 6px 0; font-size: 14px; font-weight: 700; }
+.solucion-manual ol { margin: 4px 0 10px; padding-left: 22px; font-size: 14px; line-height: 1.45; }
+.solucion-manual ol li { margin-bottom: 6px; overflow-wrap: anywhere; }
+.solucion-manual .porque-paso { color: var(--grafito); font-size: 13px; }
 
 /* ---------- retos ---------- */
 .lista-retos { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 4px; }

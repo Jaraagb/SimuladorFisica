@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import * as Fisica from '../fisica/fisica.js';
 import { CASOS_PRUEBA, correrCaso, CASOS_VALIDACION, correrValidacion } from '../fisica/casos-prueba.js';
 import { validarTodo, LIMITES } from '../fisica/validacion.js';
+import { SOLUCION_MANUAL } from '../solucion-manual.js';
 import { fmt, fmtS } from '../formato.js';
 import Grafica from './Grafica.jsx';
 import { deslizaEn } from './Escenario.jsx';
@@ -182,6 +183,20 @@ export function PanelCuentas({ sim }) {
         <ol className="pasos">{pasos.map(p => <li key={p}>{p}</li>)}</ol>
         <h3>Módulo II: trabajo y energía</h3>
         <ol className="pasos">{pasosE.map(p => <li key={p}>{p}</li>)}</ol>
+        <h3>Casos A, B y C resueltos a mano</h3>
+        <ul className="lista-pruebas solucion-manual">
+          {SOLUCION_MANUAL.map(s => (
+            <li key={s.caso}>
+              <details>
+                <summary>{s.titulo}</summary>
+                <p className="datos-caso">{s.datos}</p>
+                <ol>{s.pasos.map(p => (
+                  <li key={p.paso}><b>{p.paso}{p.paso.endsWith('?') ? '' : '.'}</b> <span className="cuenta">{p.cuenta}</span><br /><span className="porque-paso">{p.porque}</span></li>
+                ))}</ol>
+              </details>
+            </li>
+          ))}
+        </ul>
       </section>
       <section>
         <h3>Validación contra los casos resueltos a mano</h3>

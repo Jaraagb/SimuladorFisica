@@ -121,7 +121,8 @@ React 18 y Vite 5 (licencia MIT). Tipografía Archivo (Google Fonts, licencia OF
 | Ficha de clase | `public/ficha.html` y enlace `#ficha` |
 | Hitos | `docs/hitos.md` |
 | Declaración de IA | `docs/declaracion-ia.md` |
-| Validación manual vs. programa | `docs/validacion.md` (la columna «Manual» la llena el autor) |
+| Solución manual de los casos A, B y C | `docs/solucion-manual.md` y en la app: pestaña Cuentas → «Casos A, B y C resueltos a mano» |
+| Validación manual vs. programa | `docs/validacion.md` (manual y programa coinciden en los tres casos) |
 | Despliegue público | https://simuladorfisica.andresjaraafl.workers.dev (Cloudflare Workers, `wrangler.jsonc`) |
 | Valor agregado: guía de estudio y formulario | `public/guia.html` y `public/formulario.html` |
 
