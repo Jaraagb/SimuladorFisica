@@ -22,4 +22,4 @@ Declaro que lo anterior describe con exactitud el apoyo que recibí de Claude (C
 
 Firma: Andres Jaramillo
 
-Fecha: 20/11/2026
+Fecha: 19/11/2026
