@@ -18,8 +18,8 @@
 
 ## Firma
 
-Firma: ______________________________
+Declaro que lo anterior describe con exactitud el apoyo que recibí de Claude (Claude AI y Claude Code, de Anthropic) y que el trabajo y la responsabilidad sobre el contenido son míos.
 
-Nombre: Andres Jaramillo
+Firma: Andres Jaramillo
 
-Fecha: ____ / ____ / 2026
+Fecha: 20/11/2026
