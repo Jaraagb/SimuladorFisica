@@ -1,6 +1,6 @@
 # Solución manual de los casos A, B y C
 
-Resolución paso a paso, la misma que está escrita a mano en la hoja de la entrega. Cada paso tiene la cuenta y una explicación corta. Se usa g = 9,8 m/s² solo para el peso y la normal. Esta solución también se ve en el simulador, en la pestaña **Cuentas → Casos A, B y C resueltos a mano**.
+Resolución paso a paso, la misma que está escrita a mano en la hoja de la foto. a Cada paso se le agrega una explicación corta. Se usa g = 9,8 m/s² solo para el peso y la normal. Esta solución también se ve en el simulador, en la pestaña **Cuentas → Casos A, B y C resueltos a mano**.
 
 ## Caso A · Aceleración desde el reposo
 
